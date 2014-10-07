@@ -46,6 +46,28 @@ function! JavaFindClassName(lno)
 	return get(ml, 1)
 endfunction
 
+function! JavaFindClassStart(lno)
+	let pos = getpos('.')
+	call setpos('.', [0, a:lno, 1, 0])
+	let lbrace = searchpair('{', '', '}', 'nbW')
+	call setpos('.', pos)
+	if lbrace <= 0
+		return 0
+	endif
+	return lbrace
+endfunction
+
+function! JavaFindClassEnd(lno)
+	let pos = getpos('.')
+	call setpos('.', [0, a:lno, 1, 0])
+	let rbrace = searchpair('{', '', '}', 'nW')
+	call setpos('.', pos)
+	if rbrace <= 0
+		return 0
+	endif
+	return rbrace
+endfunction
+
 function! JavaGetIndentation(lno)
 	let ldata = getline(a:lno)
 	let pos = match(ldata, '\S')
@@ -154,5 +176,38 @@ function! JavaGenerateAccessors(kinds)
 	if !len(keys)
 		return ''
 	endif
+	return keys . here . 'G'
+endfunction
+
+function! JavaGenerateAllAccessors(kinds)
+	let here = line('.')
+	let cstart = JavaFindClassStart(here)
+	let cend = JavaFindClassEnd(here)
+	if !cstart || !cend
+		echo 'Failed to determine class boundaries.'
+		return ''
+	endif
+	let line = cstart + 1
+	let keys = ''
+	while line < cend
+		let ldata = getline(line)
+		let brindex = stridx(ldata, '{')
+		if brindex < 0
+			if match(ldata, s:fieldDeclPattern) >= 0
+				let keys .= JavaGenerateAccessorsImpl(line, a:kinds)
+			endif
+			let line += 1
+		else
+			let pos = getpos('.')
+			call setpos('.', [0, line, brindex + 1, 0])
+			let rbrace = searchpair('{', '', '}', 'nW')
+			call setpos('.', pos)
+			if rbrace
+				let line = rbrace + 1
+			else
+				let line += 1
+			endif
+		endif
+	endwhile
 	return keys . here . 'G'
 endfunction
