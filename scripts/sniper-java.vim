@@ -5,6 +5,7 @@ function! SetupJavaScripts()
 	nmap <buffer> <expr> <Leader>gG JavaGenerateAllAccessors('g')
 	nmap <buffer> <expr> <Leader>gS JavaGenerateAllAccessors('s')
 	nmap <buffer> <expr> <Leader>gA JavaGenerateAllAccessors('gs')
+	nmap <buffer> <expr> <Leader>gc JavaGenerateConstructor()
 	nmap <buffer> <silent> <Leader>pi :call JavaPruneImports()<CR>
 endfunction
 

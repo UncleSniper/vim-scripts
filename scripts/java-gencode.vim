@@ -143,7 +143,13 @@ function! JavaGenerateAccessorsImpl(lno, kinds)
 			if isStatic
 				let keys .= 'static '
 			endif
-			let keys .= type . ' get' . JavaCaplitalize(name) . "() {\<CR>"
+			let keys .= type
+			if type == 'boolean'
+				let keys .= ' is'
+			else
+				let keys .= ' get'
+			endif
+			let keys .= JavaCaplitalize(name) . "() {\<CR>"
 			let keys .= JavaIndentIfNeeded(indent) . "\<Tab>return "
 			if isStatic && len(class)
 				let keys .= class . '.'
@@ -179,22 +185,21 @@ function! JavaGenerateAccessors(kinds)
 	return keys . here . 'G'
 endfunction
 
-function! JavaGenerateAllAccessors(kinds)
-	let here = line('.')
-	let cstart = JavaFindClassStart(here)
-	let cend = JavaFindClassEnd(here)
+function! JavaFindAllFields(lno)
+	let cstart = JavaFindClassStart(a:lno)
+	let cend = JavaFindClassEnd(a:lno)
 	if !cstart || !cend
 		echo 'Failed to determine class boundaries.'
-		return ''
+		return []
 	endif
 	let line = cstart + 1
-	let keys = ''
+	let fields = []
 	while line < cend
 		let ldata = getline(line)
 		let brindex = stridx(ldata, '{')
 		if brindex < 0
 			if match(ldata, s:fieldDeclPattern) >= 0
-				let keys .= JavaGenerateAccessorsImpl(line, a:kinds)
+				call add(fields, line)
 			endif
 			let line += 1
 		else
@@ -209,5 +214,51 @@ function! JavaGenerateAllAccessors(kinds)
 			endif
 		endif
 	endwhile
+	return fields
+endfunction
+
+function! JavaGenerateAllAccessors(kinds)
+	let here = line('.')
+	let fields = reverse(JavaFindAllFields(here))
+	let keys = ''
+	for line in fields
+		let keys .= JavaGenerateAccessorsImpl(line, a:kinds)
+	endfor
 	return keys . here . 'G'
+endfunction
+
+function! JavaGenerateConstructor()
+	let here = line('.')
+	let class = JavaFindClassName(here)
+	if !len(class)
+		echo 'Failed to determine class name.'
+		return ''
+	endif
+	let fields = JavaFindAllFields(here)
+	if !len(fields)
+		return ''
+	endif
+	let lastfield = get(fields, len(fields) - 1)
+	let indent = JavaGetIndentation(lastfield)
+	let keys =  lastfield . "Go\<Esc>i\<CR>" . indent . 'public ' . class . '('
+	let assignments = ''
+	for idx in range(len(fields))
+		let field = JavaAnalyzeFieldDeclaration(get(fields, idx))
+		if !get(field, 1)
+			if idx
+				let keys .= ', '
+			endif
+			let keys .= get(field, 3) . ' ' . get(field, 4)
+			let assignments .= "\<CR>"
+			if idx
+				let assignments .= JavaIndentIfNeeded(indent . "\<Tab>")
+			else
+				let assignments .= JavaIndentIfNeeded(indent) . "\<Tab>"
+			endif
+			let assignments .= 'this.' . get(field, 4) . ' = ' . get(field, 4) . ';'
+		endif
+	endfor
+	let keys .= ') {'
+	let assignments .= "\<CR>" . JavaUnindentIfNeeded(indent) . "}\<Esc>"
+	return keys . assignments
 endfunction
