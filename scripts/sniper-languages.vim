@@ -14,3 +14,8 @@ au BufRead,BufNewFile snakefile setf snake
 au BufRead,BufNewFile *.snakefile setf snake
 au BufRead,BufNewFile *.lisp set nolisp
 let lisp_rainbow = 1
+
+" highlight excess whitespace
+"au BufWinEnter,WinEnter * match Error /\s\+$/
+au InsertLeave * match Error /\s\+$/
+au InsertEnter * match
