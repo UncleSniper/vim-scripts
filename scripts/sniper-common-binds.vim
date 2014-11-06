@@ -14,7 +14,7 @@ noremap <silent> <Leader><Leader> :BufExplorer<CR>
 "noremap <silent> <C-p> :bp<CR>
 
 " languages may override
-nmap <Leader>m :make<CR>
+nmap <Leader>m :make<Space>\|<Space>cwindow<CR>
 
 " gah
 imap <C-l> l

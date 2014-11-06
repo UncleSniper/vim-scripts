@@ -13,3 +13,9 @@ runtime scripts/sniper-projects.vim
 
 " language-specific stuff
 runtime scripts/sniper-java.vim
+
+" now the bundle manager can do its thing
+call pathogen#infect()
+
+" language-specific stuff managed by package manager
+runtime scripts/extern-java.vim

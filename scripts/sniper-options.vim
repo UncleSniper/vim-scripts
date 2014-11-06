@@ -1,2 +1,1 @@
-set bg=dark sw=4 ai sm ts=4 noea
-
+set bg=dark sw=4 ai sm ts=4 noea swb=usetab,newtab
