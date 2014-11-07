@@ -56,7 +56,7 @@ class OutputReader(object):
 		msg += ': ' + self.errmsg
 		print(msg)
 
-proc = subprocess.Popen(['ant'], stdout = subprocess.PIPE, stderr = subprocess.STDOUT)
+proc = subprocess.Popen(['ant'] + sys.argv[1:], stdout = subprocess.PIPE, stderr = subprocess.STDOUT)
 reader = OutputReader()
 while True:
 	line = proc.stdout.readline().decode('utf-8')
