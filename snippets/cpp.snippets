@@ -1,0 +1,54 @@
+priority -49
+
+snippet ns "namespace"
+namespace ${1} {
+	${0}
+}
+endsnippet
+
+snippet cl "class"
+class ${1:`!p snip.rv = snip.basename or 'Foo'`} {
+
+  private:
+	${0}
+
+  public:
+	${1///}() {}
+	${1///}(const ${1///}& ${1/.*/\l$0/}) {}
+
+};
+endsnippet
+
+snippet tp "template"
+template<${0}>
+endsnippet
+
+snippet pu "public"
+  public:
+	${0}
+endsnippet
+
+snippet po "protected"
+  protected:
+	${0}
+endsnippet
+
+snippet pr "private"
+  private:
+	${0}
+endsnippet
+
+snippet ty "typedef"
+typedef ${1} ${2};
+${0}
+endsnippet
+
+snippet tty "template typedef"
+typedef ${1}<${2}> ${3};
+${0}
+endsnippet
+
+snippet ttty "dependent template typedef"
+typedef typename ${1}<${2}> ${3};
+${0}
+endsnippet
