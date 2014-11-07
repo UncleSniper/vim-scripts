@@ -14,3 +14,4 @@ set wildignore+=*/build/**
 let g:ctrlp_use_caching=0
 
 let g:rooter_use_lcd = 1
+let g:rooter_patterns = ['.git', '.git/', '_darcs/', '.hg/', '.bzr/', '.svn/', 'makefile', 'Makefile', 'build.xml', 'pom.xml']
