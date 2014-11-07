@@ -1,4 +1,4 @@
-let g:UltiSnipsSnippetDirectories=["UltiSnips", "usnippets"]
+let g:UltiSnipsSnippetDirectories=["UltiSnips", "honza-snippets", "usnippets"]
 let g:UltiSnipsListSnippets = "<S-Tab>"
 let g:UltiSnipsJumpForwardTrigger = "<Tab>"
 
