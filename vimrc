@@ -7,6 +7,7 @@ runtime scripts/java-gencode.vim
 runtime scripts/newblock.vim
 
 " global stuff
+runtime scripts/sniper-common-actions.vim
 runtime scripts/sniper-common-binds.vim
 runtime scripts/sniper-languages.vim
 runtime scripts/sniper-projects.vim

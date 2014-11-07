@@ -23,3 +23,7 @@ imap <C-l> l
 imap <C-b> {<CR>}<C-o>O<Tab>
 imap <expr> <C-]> InsertNewBlock()
 nmap <C-p> }<CR>
+
+" generic stuff
+nmap <Leader>s :vsp<CR>
+nmap <expr> <Leader>W CleanUpWhitespace()
