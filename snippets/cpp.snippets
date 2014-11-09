@@ -2,8 +2,21 @@ priority -49
 
 snippet ns "namespace"
 namespace ${1} {
+
 	${0}
+
 }
+endsnippet
+
+snippet nns "nested namespace"
+`!p
+snip.rv = ''
+for segment in snip.v.text.strip('\r\n \t').split('::'):
+	snip.rv += snip.mkline('namespace ' + segment + ' ' + chr(123) + '\n')
+`
+	${0}
+
+`!p snip.rv = '}' * len(snip.v.text.split('::'))`
 endsnippet
 
 snippet cl "class"
@@ -51,4 +64,13 @@ endsnippet
 snippet ttty "dependent template typedef"
 typedef typename ${1}<${2}> ${3};
 ${0}
+endsnippet
+
+snippet grd "guard macro"
+#ifndef ${1:`!v toupper(fnamemodify(getcwd(), ':t') . '_' . substitute(expand('%:t'), '[^a-zA-Z0-9]\+', '_', 'g'))`}
+#define ${1///}
+
+${0}
+
+#endif /* ${1///} */
 endsnippet

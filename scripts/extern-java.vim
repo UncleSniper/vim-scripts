@@ -1,6 +1,8 @@
 let g:UltiSnipsSnippetDirectories=["UltiSnips", "usnippets"]
 let g:UltiSnipsListSnippets = "<S-Tab>"
 let g:UltiSnipsJumpForwardTrigger = "<Tab>"
+nmap <Leader><Tab> V<Tab>
+imap <Bslash><Tab> <Esc>V<Tab>
 
 let delimitMate_expand_cr = 1
 let delimitMate_expand_space = 1
