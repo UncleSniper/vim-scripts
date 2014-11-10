@@ -1,4 +1,5 @@
 runtime scripts/sniper-options.vim
+runtime scripts/sniper-utils.vim
 
 " functions
 runtime scripts/java-fold.vim

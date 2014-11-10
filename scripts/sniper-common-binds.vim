@@ -14,7 +14,8 @@ noremap <silent> <Leader><Leader> :BufExplorer<CR>
 "noremap <silent> <C-p> :bp<CR>
 
 " languages may override
-nmap <Leader>m :make<Space>\|<Space>cwindow<CR>
+nmap <silent> <Leader>m :make<Space>\|<Space>cwindow<CR>
+nmap <silent> <Leader>e :cn<CR>
 
 " gah
 imap <C-l> l
@@ -27,3 +28,10 @@ nmap <C-p> }<CR>
 " generic stuff
 nmap <Leader>s :vsp<CR>
 nmap <expr> <Leader>W CleanUpWhitespace()
+
+" common, but optional
+function! BindSemicolonLanguage()
+	inoremap ; <End>;
+	inoremap ;<BS> ;
+	inoremap ;; <End>
+endfunction

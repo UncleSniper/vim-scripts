@@ -10,8 +10,9 @@ function! SetupJavaScripts()
 	" compiler junk
 	setl makeprg=vimant
 	setl efm=\ \ \ \ %f:%l:%c:\ %m
+	setl efm+=\ \ \ \ %f:%c:\ %m
 	"compiler ant
-	nmap <buffer> <silent> <Leader>e :cn<CR>
+	call BindSemicolonLanguage()
 endfunction
 
 au BufRead,BufNewFile *.java call SetupJavaScripts()
