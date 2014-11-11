@@ -1,0 +1,9 @@
+set -e
+git clone https://github.com/jlanzarotta/bufexplorer.git
+git clone https://github.com/kien/ctrlp.vim
+git clone https://github.com/Raimondi/delimitMate.git
+git clone https://github.com/scrooloose/nerdtree
+git clone https://github.com/ervandew/supertab.git
+git clone https://github.com/SirVer/ultisnips.git
+git clone https://github.com/tpope/vim-fugitive.git
+git clone https://github.com/airblade/vim-rooter.git
