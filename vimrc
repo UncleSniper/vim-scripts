@@ -12,6 +12,7 @@ runtime scripts/sniper-common-actions.vim
 runtime scripts/sniper-common-binds.vim
 runtime scripts/sniper-languages.vim
 runtime scripts/sniper-projects.vim
+runtime scripts/sniper-git-binding.vim
 
 " language-specific stuff
 runtime scripts/sniper-java.vim

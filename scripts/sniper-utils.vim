@@ -24,3 +24,21 @@ function GetGitTag()
 		return 'v0.1'
 	endif
 endfunction
+
+function! OpenInfoWindowVertical(width, type)
+	exec 'topleft vertical ' . a:width . ' new'
+	setl wfw noswf buftype=nofile bufhidden=wipe
+	setl nowrap foldcolumn=0 foldmethod=manual
+	setl nofoldenable nobuflisted nospell
+	exec 'setl ft=' . a:type
+	iabc <buffer>
+endfunction
+
+function! OpenInfoWindowHorizontal(height, type)
+	exec 'topleft ' . a:height . ' new'
+	setl wfw noswf buftype=nofile bufhidden=wipe
+	setl nowrap foldcolumn=0 foldmethod=manual
+	setl nofoldenable nobuflisted nospell
+	exec 'setl ft=' . a:type
+	iabc <buffer>
+endfunction
