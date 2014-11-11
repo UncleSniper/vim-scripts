@@ -28,6 +28,7 @@ nmap <C-p> }<CR>
 " generic stuff
 nmap <Leader>s :vsp<CR>
 nmap <expr> <Leader>W CleanUpWhitespace()
+nmap <expr> <Leader>N NewFileInteractive()
 
 " common, but optional
 function! BindSemicolonLanguage()

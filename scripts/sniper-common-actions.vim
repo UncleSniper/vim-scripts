@@ -10,3 +10,7 @@ function! CleanUpWhitespace()
 	endwhile
 	return keys
 endfunction
+
+function! NewFileInteractive()
+	return ':vi ' . expand('%:h') . '/.' . expand('%:t:e') . repeat("\<Left>", len(expand('%:t:e')) + 1)
+endfunction
