@@ -26,7 +26,7 @@ function GetGitTag()
 endfunction
 
 function! OpenInfoWindowVertical(side, width, type)
-	exec (a:side == 'bottom' ? 'botright' : 'topleft') . ' vertical ' . a:width . ' new'
+	exec (a:side == 'right' ? 'botright' : 'topleft') . ' vertical ' . a:width . ' new'
 	setl wfw noswf buftype=nofile bufhidden=wipe
 	setl nowrap foldcolumn=0 foldmethod=manual
 	setl nofoldenable nobuflisted nospell
@@ -35,7 +35,7 @@ function! OpenInfoWindowVertical(side, width, type)
 endfunction
 
 function! OpenInfoWindowHorizontal(side, height, type)
-	exec (a:side == 'right' ? 'botright ' : 'topleft ') . a:height . ' new'
+	exec (a:side == 'bottom' ? 'botright ' : 'topleft ') . a:height . ' new'
 	setl wfw noswf buftype=nofile bufhidden=wipe
 	setl nowrap foldcolumn=0 foldmethod=manual
 	setl nofoldenable nobuflisted nospell
