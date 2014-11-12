@@ -4,7 +4,7 @@ nmap <silent> <Leader>G? :Gpull<CR>
 nmap <silent> <Leader>G! :Gpush<CR>
 
 function! ShowGitStatus()
-	call OpenInfoWindowHorizontal(15, 'gitstatus')
+	call OpenInfoWindowHorizontal('top', 15, 'gitstatus')
 	file *git-status*
 	read !git status --porcelain
 	normal 1Gdd0
