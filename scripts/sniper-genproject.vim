@@ -149,6 +149,15 @@ function! CompleteJavaProjectBasePackage(argLead, cmdLine, cursorPos)
 	return items
 endfunction
 
+function! CompleteJavaProjectServletClass(argLead, cmdLine, cursorPos)
+	let llen = len(a:argLead)
+	if llen >= 7 && strpart(a:argLead, llen - 7) == 'Servlet'
+		return [a:argLead, strpart(a:argLead, 0, llen - 7)]
+	else
+		return [a:argLead . 'Servlet', a:argLead]
+	endif
+endfunction
+
 function! NewJavaProject(name, modtype)
 	let s:javaProjectName = a:name
 	let pkg = input('Base package? ', '', 'customlist,CompleteJavaProjectBasePackage')
@@ -156,8 +165,10 @@ function! NewJavaProject(name, modtype)
 		echo 'No package name supplied, aborting.'
 		return
 	endif
-	if a:modtype == 1 || a:modtype == 3
+	if a:modtype == 1
 		let mainclass = input('Main class? ', '')
+	elseif a:modtype == 3
+		let mainclass = input('Servlet class? ', '', 'customlist,CompleteJavaProjectServletClass')
 	else
 		let mainclass = ''
 	endif
