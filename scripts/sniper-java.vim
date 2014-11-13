@@ -7,6 +7,7 @@ function! SetupJavaScripts()
 	nmap <buffer> <expr> <Leader>gA JavaGenerateAllAccessors('gs')
 	nmap <buffer> <expr> <Leader>gc JavaGenerateConstructor()
 	nmap <buffer> <silent> <Leader>pi :call JavaPruneImports()<CR>
+	nmap <buffer> <Leader>gi :call JavaGenImports()<CR>
 	" compiler junk
 	setl makeprg=vimant
 	setl efm=\ \ \ \ %f:%l:%c:\ %m

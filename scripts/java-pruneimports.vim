@@ -2,6 +2,24 @@ function! JavaIsImport(data)
 	return match(a:data, '^import\s\+\h\w*\(\.\h\w*\)*\s*;\s*$') >= 0
 endfunction
 
+function! JavaIsPackageDeclaration(data)
+	return match(a:data, '^package\s\+\h\w*\(\.\h\w*\)*\s*;\s*$') >= 0
+endfunction
+
+function! JavaHasImportForSimple(name)
+	return search('^import\s\+\h\w*\(\.\h\w*\)\.\<' . EscapeFromSubstPattern(a:name) . '\>\s*;\s*$', 'cnw')
+endfunction
+
+function! JavaHasTypeDefinition(name)
+	for lnr in range(1, line('$'))
+		let l = JavaStripStrings(getline(lnr))
+		if match(l, '\<\%(class\|enum\) ' . EscapeFromSubstPattern(a:name) . '\>') >= 0
+			return 1
+		endif
+	endfor
+	return 0
+endfunction
+
 function! JavaIsImportUsed(sname)
 	call cursor(1, 1)
 	let pat = '\<' . a:sname . '\>'
@@ -41,4 +59,80 @@ function! JavaPruneImports()
 		let bias += 1
 	endfor
 	call cursor(oriline, oricol)
+endfunction
+
+function! JavaStripStrings(data)
+	return substitute(a:data, '"\%([^"\\]\|\\.\)*"', '', 'g')
+endfunction
+
+function! JavaGenImports()
+	let oriline = line('.')
+	let oricol = col('.')
+	let types = {}
+	for lnr in range(1, line('$'))
+		let l = getline(lnr)
+		if JavaIsPackageDeclaration(l) || JavaIsImport(l)
+			continue
+		endif
+		let l = JavaStripStrings(l)
+		let start = 0
+		while 1
+			let pos = match(l, '\<[A-Z]\w\w\+\>', start)
+			if pos < 0
+				break
+			endif
+			let sname = get(matchlist(l, '\<[A-Z]\w\w\+\>', start), 0)
+			let types[sname] = 1
+			let start = pos + len(sname)
+		endwhile
+	endfor
+	call OpenInfoWindowHorizontal('bottom', 20, 'none')
+	for type in keys(types)
+		if !JavaHasImportForSimple(type) && !JavaHasTypeDefinition(type)
+			call JavaGenImportForSimple(type)
+		endif
+	endfor
+	call cursor(oriline, oricol)
+endfunction
+
+function! JavaGenImportForSimple(name)
+	let lstf = expand('~/.vim/javatypes.lst')
+	if !len(glob(lstf))
+		return
+	endif
+	let candidates = GetOutputOf(['grep', '-E', '\.' . a:name . '$', lstf], 1)
+	if !len(candidates)
+		return
+	endif
+	for cnd in candidates
+		if cnd == 'java.lang.' . a:name
+			return
+		endif
+	endfor
+	if len(candidates) == 1
+		call JavaGenImportForQualified(get(candidates, 0))
+	else
+		let idx = 1
+		let choices = '&0 <none>'
+		for cnd in candidates
+			let choices .= "\n&" . idx . ' ' . cnd
+			let idx += 1
+		endfor
+		let chosen = confirm('', choices, 1) - 1
+		if chosen
+			call JavaGenImportForQualified(get(candidates, chosen - 1))
+		endif
+	endif
+endfunction
+
+function! JavaGenImportForQualified(name)
+	call LogGenProjectAction('candidate', a:name)
+	let lastimp = 0
+	for lnr in range(1, line('$'))
+		let l = getline(lnr)
+		if match(l, '^\s*$') >= 0 || JavaIsPackageDeclaration(l)
+			continue
+		endif
+		"TODO
+	endfor
 endfunction
