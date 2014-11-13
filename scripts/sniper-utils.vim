@@ -42,3 +42,11 @@ function! OpenInfoWindowHorizontal(side, height, type)
 	exec 'setl ft=' . a:type
 	iabc <buffer>
 endfunction
+
+function! EscapeFromSubstPattern(str)
+	return escape(a:str, '$^*[]/\')
+endfunction
+
+function! EscapeFromSubstReplacement(str)
+	return escape(a:str, '&/\')
+endfunction

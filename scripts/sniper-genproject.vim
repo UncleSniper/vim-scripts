@@ -17,9 +17,13 @@ function! NewProject()
 		echo "File '" . name . "' already exists."
 		return
 	endif
+	let oldlz = &lz
+	set lz
 	if plang == 1
 		call NewJavaProject(name, modtype)
 	endif
+	let &lz = oldlz
+	redraw!
 endfunction
 
 let s:commonGitExcudes = ['.*.swp']
@@ -49,6 +53,24 @@ function! GenProjectFile(path, lines, clear)
 	if a:clear
 		normal ggdd
 	endif
+	write
+	quit
+endfunction
+
+let g:genProjectTemplatesDir = '~/.vim/genproject'
+
+function! GenProjectFileFromTemplate(template, destination, variables)
+	call LogGenProjectAction('gen', a:destination)
+	let tplfile = fnamemodify(g:genProjectTemplatesDir . '/' . a:template, ':p')
+	let dest = fnamemodify(a:destination, ':p')
+	vsplit
+	exec 'vi ' . tplfile
+	exec 'write ' . dest
+	exec 'vi ' . dest
+	for key in keys(a:variables)
+		let value = get(a:variables, key)
+		exec '%s/\<' . EscapeFromSubstPattern(key) . '\>/' . EscapeFromSubstReplacement(value) . '/g'
+	endfor
 	write
 	quit
 endfunction
@@ -121,6 +143,8 @@ function! GenJavaProject(name, modtype, basepkg)
 	call CommonGenProjectHead(a:name)
 	" Git stuff
 	call GenProjectFile('.git/info/exclude', s:commonGitExcudes + s:javaGitExcludes, 0)
+	" build.xml
+	call GenAntBuildfile(a:name, a:basepkg)
 	" lib/
 	call LogGenProjectAction('mkdir', 'lib')
 	call mkdir('lib')
@@ -129,9 +153,35 @@ function! GenJavaProject(name, modtype, basepkg)
 	let srcdir = 'src/' . substitute(a:basepkg, '\.', '/', 'g')
 	call LogGenProjectAction('mkdir', srcdir)
 	call mkdir(srcdir, 'p')
+	" Resources.java, Localization.java
+	let resdir = srcdir . '/resource'
+	call LogGenProjectAction('mkdir', resdir)
+	call mkdir(resdir)
+	call GenJavaResourcesClass(a:name, resdir, a:basepkg)
+	" res/
+	call LogGenProjectAction('mkdir', 'res')
+	call mkdir('res')
 	" done
 	call LogGenProjectAction('note', 'Finished generating Java project.')
 	redraw!
+endfunction
+
+function GenAntBuildfile(prjname, basepkg)
+	call GenProjectFileFromTemplate('build.xml', 'build.xml', {
+\		'PRJNAME': a:prjname,
+\		'BASEPKG': a:basepkg,
+\		'BASEPKGDIR': substitute(a:basepkg, '\.', '/', 'g')
+\	})
+endfunction
+
+function GenJavaResourcesClass(prjname, resdir, basepkg)
+	call GenProjectFileFromTemplate('Resources.java', a:resdir . '/Resources.java', {
+\		'PRJNAME': a:prjname,
+\		'BASEPKG': a:basepkg
+\	})
+	call GenProjectFileFromTemplate('Localization.java', a:resdir . '/Localization.java', {
+\		'BASEPKG': a:basepkg
+\	})
 endfunction
 
 " ========== commands ==========
