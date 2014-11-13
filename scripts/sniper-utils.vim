@@ -17,7 +17,7 @@ function! GetOutputOf(argv)
 	return output
 endfunction
 
-function GetGitTag()
+function! GetGitTag()
 	if len(GetOutputOf(['git', 'tag']))
 		return get(GetOutputOf(['git', 'describe', '--tags']), 0)
 	else
@@ -49,4 +49,8 @@ endfunction
 
 function! EscapeFromSubstReplacement(str)
 	return escape(a:str, '&/\')
+endfunction
+
+function! IsFuncref(object)
+	return string(a:object) =~ "function('.*')"
 endfunction

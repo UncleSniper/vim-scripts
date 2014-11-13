@@ -8,6 +8,7 @@
 	<property name="pkgdist" location="${dist}/BASEPKG.jar"/>
 	<property name="res" location="res"/>
 	<property name="binres" location="${bin}/BASEPKGDIR/resource"/>
+MANIFEST_PROPERTY
 
 	<path id="build.classpath">
 		<fileset dir="${lib}" includes="**/*.jar"/>
@@ -33,7 +34,7 @@
 				<filename name="**/*"/>
 			</fileset>
 		</copy>
-		<jar jarfile="${pkgdist}" basedir="${bin}"/>
+		<jar jarfile="${pkgdist}" basedir="${bin}"MANIFEST_REFERENCE/>
 		<copy todir="${dist}/lib">
 			<fileset dir="${lib}">
 				<filename name="**/*.jar"/>

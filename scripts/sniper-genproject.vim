@@ -7,7 +7,11 @@ function! NewProject()
 		echo 'Nevermind, then.'
 		return
 	endif
-	let modtype = confirm('Module type?', "&Executable\n&Library")
+	if plang == 1
+		let modtype = confirm('Module type?', "&Executable\n&Library\n&Servlet")
+	else
+		let modtype = confirm('Module type?', "&Executable\n&Library")
+	endif
 	let name = input('Project name? ')
 	if !len(name)
 		echo 'No name supplied, aborting.'
@@ -59,7 +63,7 @@ endfunction
 
 let g:genProjectTemplatesDir = '~/.vim/genproject'
 
-function! GenProjectFileFromTemplate(template, destination, variables)
+function! GenProjectFileFromTemplate(template, destination, variables, resolve, resolveVars)
 	call LogGenProjectAction('gen', a:destination)
 	let tplfile = fnamemodify(g:genProjectTemplatesDir . '/' . a:template, ':p')
 	let dest = fnamemodify(a:destination, ':p')
@@ -67,12 +71,27 @@ function! GenProjectFileFromTemplate(template, destination, variables)
 	exec 'vi ' . tplfile
 	exec 'write ' . dest
 	exec 'vi ' . dest
+	if IsFuncref(a:resolve)
+		call a:resolve(a:resolveVars)
+	endif
 	for key in keys(a:variables)
 		let value = get(a:variables, key)
 		exec '%s/\<' . EscapeFromSubstPattern(key) . '\>/' . EscapeFromSubstReplacement(value) . '/g'
 	endfor
 	write
 	quit
+endfunction
+
+function! GenProjectFileKillMarker(marker)
+	exec '/^' . EscapeFromSubstPattern(a:marker) . '$'
+	normal dd
+endfunction
+
+function! GenProjectFileResolveMarker(marker, template)
+	let path = fnamemodify(g:genProjectTemplatesDir . '/' . a:template, ':p')
+	exec '/^' . EscapeFromSubstPattern(a:marker) . '$'
+	normal ddk
+	exec 'read ' . path
 endfunction
 
 function! LogGenProjectAction(action, argument)
@@ -136,15 +155,24 @@ function! NewJavaProject(name, modtype)
 		echo 'No package name supplied, aborting.'
 		return
 	endif
-	call GenJavaProject(a:name, a:modtype, pkg)
+	if a:modtype == 1 || a:modtype == 3
+		let mainclass = input('Main class? ', '')
+	else
+		let mainclass = ''
+	endif
+	call GenJavaProject(a:name, a:modtype, pkg, mainclass)
 endfunction
 
-function! GenJavaProject(name, modtype, basepkg)
+function! GenJavaProject(name, modtype, basepkg, mainclass)
 	call CommonGenProjectHead(a:name)
 	" Git stuff
 	call GenProjectFile('.git/info/exclude', s:commonGitExcudes + s:javaGitExcludes, 0)
 	" build.xml
-	call GenAntBuildfile(a:name, a:basepkg)
+	call GenAntBuildfile(a:name, a:basepkg, a:modtype)
+	" manifest.mf
+	if a:modtype == 1
+		call GenProjectFile('manifest.mf', ['Main-Class: ' . a:basepkg . '.' . a:mainclass], 1)
+	endif
 	" lib/
 	call LogGenProjectAction('mkdir', 'lib')
 	call mkdir('lib')
@@ -161,27 +189,40 @@ function! GenJavaProject(name, modtype, basepkg)
 	" res/
 	call LogGenProjectAction('mkdir', 'res')
 	call mkdir('res')
+	call GenProjectFile('res/' . a:name . '.properties', [], 1)
 	" done
 	call LogGenProjectAction('note', 'Finished generating Java project.')
 	redraw!
 endfunction
 
-function GenAntBuildfile(prjname, basepkg)
+function! GenAntBuildfile(prjname, basepkg, modtype)
 	call GenProjectFileFromTemplate('build.xml', 'build.xml', {
 \		'PRJNAME': a:prjname,
 \		'BASEPKG': a:basepkg,
-\		'BASEPKGDIR': substitute(a:basepkg, '\.', '/', 'g')
+\		'BASEPKGDIR': substitute(a:basepkg, '\.', '/', 'g'),
+\		'MANIFEST_REFERENCE': a:modtype == 1 ? ' manifest="${manifest}"' : ''
+\	}, function('GenAntBuildfileResolve'), {
+\		'hasManifest': a:modtype == 1
 \	})
 endfunction
 
-function GenJavaResourcesClass(prjname, resdir, basepkg)
+function! GenAntBuildfileResolve(variables)
+	" manifest
+	if get(a:variables, 'hasManifest')
+		call GenProjectFileResolveMarker('MANIFEST_PROPERTY', 'build-manifest-property.xml')
+	else
+		call GenProjectFileKillMarker('MANIFEST_PROPERTY')
+	endif
+endfunction
+
+function! GenJavaResourcesClass(prjname, resdir, basepkg)
 	call GenProjectFileFromTemplate('Resources.java', a:resdir . '/Resources.java', {
 \		'PRJNAME': a:prjname,
 \		'BASEPKG': a:basepkg
-\	})
+\	}, 0, 0)
 	call GenProjectFileFromTemplate('Localization.java', a:resdir . '/Localization.java', {
 \		'BASEPKG': a:basepkg
-\	})
+\	}, 0, 0)
 endfunction
 
 " ========== commands ==========
