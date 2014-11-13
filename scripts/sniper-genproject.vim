@@ -33,7 +33,7 @@ endfunction
 let s:commonGitExcudes = ['.*.swp']
 
 function! CommonGenProjectHead(name)
-	call OpenInfoWindowHorizontal('bottom', &lines / 3, 'genprojectout')
+	call OpenInfoWindowHorizontal('bottom', &lines / 2, 'genprojectout')
 	file *gen-project*
 	setl nomodifiable
 	nmap <buffer> <CR> <C-w>q
@@ -116,8 +116,9 @@ endfunction
 
 let s:javaPackagePrefixes = []
 let s:javaProjectNameStrip = []
-let s:javaGitExcludes = ['/lib/*.jar', '/bin', '/dist']
+let s:javaGitExcludes = ['/lib/*.jar', '/bin', '/warbin', '/dist', '/doc/api']
 let s:javaDependLines = ['This component does not have any dependencies.']
+let s:javaDependLinesWAR = ['Place the Servlet API package (servlet-api.jar) into this directory.']
 
 function! AddJavaPackagePrefix(prefix)
 	call add(s:javaPackagePrefixes, a:prefix)
@@ -173,10 +174,16 @@ function! GenJavaProject(name, modtype, basepkg, mainclass)
 	if a:modtype == 1
 		call GenProjectFile('manifest.mf', ['Main-Class: ' . a:basepkg . '.' . a:mainclass], 1)
 	endif
+	" web.xml
+	if a:modtype == 3
+		call GenJavaWebXML(a:name, a:basepkg . '.' . a:mainclass)
+	endif
+	" jre6.packages
+	call GenProjectFileFromTemplate('jre6.packages', 'jre6.packages', {}, 0, 0)
 	" lib/
 	call LogGenProjectAction('mkdir', 'lib')
 	call mkdir('lib')
-	call GenProjectFile('lib/DEPEND', s:javaDependLines, 1)
+	call GenProjectFile('lib/DEPEND', a:modtype == 3 ? s:javaDependLinesWAR : s:javaDependLines, 1)
 	" src/
 	let srcdir = 'src/' . substitute(a:basepkg, '\.', '/', 'g')
 	call LogGenProjectAction('mkdir', srcdir)
@@ -202,7 +209,8 @@ function! GenAntBuildfile(prjname, basepkg, modtype)
 \		'BASEPKGDIR': substitute(a:basepkg, '\.', '/', 'g'),
 \		'MANIFEST_REFERENCE': a:modtype == 1 ? ' manifest="${manifest}"' : ''
 \	}, function('GenAntBuildfileResolve'), {
-\		'hasManifest': a:modtype == 1
+\		'hasManifest': a:modtype == 1,
+\		'makesWAR': a:modtype == 3
 \	})
 endfunction
 
@@ -213,6 +221,20 @@ function! GenAntBuildfileResolve(variables)
 	else
 		call GenProjectFileKillMarker('MANIFEST_PROPERTY')
 	endif
+	" warball
+	if get(a:variables, 'makesWAR')
+		call GenProjectFileResolveMarker('WAR_PROPERTIES', 'build-war-properties.xml')
+		call GenProjectFileResolveMarker('WAR_INIT', 'build-war-init.xml')
+		call GenProjectFileResolveMarker('SERVLET_LIB_EXCLUDE', 'build-servlet-lib-exclude.xml')
+		call GenProjectFileResolveMarker('WAR_TARGET', 'build-war-target.xml')
+		call GenProjectFileResolveMarker('WAR_CLEAN', 'build-war-clean.xml')
+	else
+		call GenProjectFileKillMarker('WAR_PROPERTIES')
+		call GenProjectFileKillMarker('WAR_INIT')
+		call GenProjectFileKillMarker('SERVLET_LIB_EXCLUDE')
+		call GenProjectFileKillMarker('WAR_TARGET')
+		call GenProjectFileKillMarker('WAR_CLEAN')
+	endif
 endfunction
 
 function! GenJavaResourcesClass(prjname, resdir, basepkg)
@@ -222,6 +244,15 @@ function! GenJavaResourcesClass(prjname, resdir, basepkg)
 \	}, 0, 0)
 	call GenProjectFileFromTemplate('Localization.java', a:resdir . '/Localization.java', {
 \		'BASEPKG': a:basepkg
+\	}, 0, 0)
+endfunction
+
+function! GenJavaWebXML(prjname, mainclass)
+	let mcbase = substitute(a:mainclass, '.*\.', '', '')
+	call GenProjectFileFromTemplate('web.xml', 'web.xml', {
+\		'PRJNAME': a:prjname,
+\		'SERVLET_CLASS_BASE': mcbase,
+\		'SERVLET_CLASS_QNAME': a:mainclass
 \	}, 0, 0)
 endfunction
 
