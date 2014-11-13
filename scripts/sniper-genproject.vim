@@ -17,7 +17,7 @@ function! NewProject()
 		echo 'No name supplied, aborting.'
 		return
 	endif
-	if len(glob(name))
+	if len(glob(name, 1))
 		echo "File '" . name . "' already exists."
 		return
 	endif
@@ -96,8 +96,8 @@ endfunction
 
 function! LogGenProjectAction(action, argument)
 	let msg = toupper(a:action)
-	if len(msg) < 5
-		let msg .= repeat(' ', 5 - len(msg))
+	if len(msg) < 6
+		let msg .= repeat(' ', 6 - len(msg))
 	endif
 	if len(a:argument)
 		let msg .= ' ' . a:argument
@@ -195,6 +195,7 @@ function! GenJavaProject(name, modtype, basepkg, mainclass)
 	call LogGenProjectAction('mkdir', 'lib')
 	call mkdir('lib')
 	call GenProjectFile('lib/DEPEND', a:modtype == 3 ? s:javaDependLinesWAR : s:javaDependLines, 1)
+	call GenProjectFileFromTemplate('java-depend.vim', 'lib/depend.vim', {'PRJNAME' : a:name}, 0, 0)
 	" src/
 	let srcdir = 'src/' . substitute(a:basepkg, '\.', '/', 'g')
 	call LogGenProjectAction('mkdir', srcdir)
@@ -267,9 +268,61 @@ function! GenJavaWebXML(prjname, mainclass)
 \	}, 0, 0)
 endfunction
 
+" ========== dependencies ==========
+
+let s:dependVimFiles = ['lib/depend.vim']
+let s:javaDependencyModules = {}
+
+function! ImportAllDependencies()
+	call OpenInfoWindowHorizontal('bottom', &lines / 2, 'genprojectout')
+	file *import-depend*
+	setl nomodifiable
+	nmap <buffer> <CR> <C-w>q
+	for fname in s:dependVimFiles
+		if len(glob(fname, 1))
+		exec 'source ' . fnamemodify(fname, ':p')
+		endif
+	endfor
+	call LogGenProjectAction('note', 'Finished resolving dependencies.')
+endfunction
+
+function! ProvideJavaDependency(modname, libdir)
+	let s:javaDependencyModules[a:modname] = a:libdir
+endfunction
+
+function! ImportJavaDependency(modname)
+	if !has_key(s:javaDependencyModules, a:modname)
+		call LogGenProjectAction('error', 'Unresolved dependency: ' . a:modname)
+		return
+	endif
+	call ImportJavaLibrariesFrom(s:javaDependencyModules[a:modname])
+endfunction
+
+function! ImportJavaLibrariesFrom(srcdir)
+	if !len(glob(a:srcdir, 1))
+		return
+	endif
+	if isdirectory(a:srcdir)
+		for child in split(glob(a:srcdir . '/*', 1), "\n")
+			call ImportJavaLibrariesFrom(child)
+		endfor
+	elseif a:srcdir =~? '\.jar$'
+		let dest = 'lib/' . fnamemodify(a:srcdir, ':t')
+		if getftime(a:srcdir) > getftime(dest)
+			call LogGenProjectAction('import', dest)
+			exec 'silent !cp ' . shellescape(a:srcdir) . ' ' . shellescape(dest)
+		endif
+	endif
+endfunction
+
 " ========== commands ==========
 
 command! Proj call NewProject()
 
 command! -nargs=1 AddJavaPackagePrefix call AddJavaPackagePrefix('<args>')
 command! -nargs=1 AddJavaProjectNameStrip call AddJavaProjectNameStrip('<args>')
+
+command! Depend call ImportAllDependencies()
+
+command! -nargs=1 RequireJavaLibrary call ImportJavaDependency('<args>')
+command! -nargs=+ ProvideJavaLibrary call ProvideJavaDependency(<f-args>)
