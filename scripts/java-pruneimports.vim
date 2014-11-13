@@ -19,6 +19,7 @@ endfunction
 function! JavaPruneImports()
 	let oriline = line('.')
 	let oricol = col('.')
+	let kill = []
 	for lnr in range(1, line('$'))
 		let l = getline(lnr)
 		if JavaIsImport(l)
@@ -27,12 +28,17 @@ function! JavaPruneImports()
 			let qname = strpart(l, nstart, nend - nstart)
 			let sname = strpart(qname, match(qname, '\h\w*$'))
 			if !JavaIsImportUsed(sname)
-				execute 'normal! ' . lnr . 'ggdd'
+				call add(kill, lnr)
 				if lnr < oriline
 					let oriline -= 1
 				endif
 			endif
 		endif
+	endfor
+	let bias = 0
+	for lnr in kill
+		exec 'normal! ' . (lnr - bias) . 'Gdd'
+		let bias += 1
 	endfor
 	call cursor(oriline, oricol)
 endfunction
