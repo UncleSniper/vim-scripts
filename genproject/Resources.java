@@ -4,7 +4,7 @@ import java.util.ResourceBundle;
 
 public final class Resources {
 
-	public static final String L10N_BUNDLE = Localization.getBundleFor(Resources.class, "PRJNAME")
+	public static final String L10N_BUNDLE = Localization.getBundleFor(Resources.class, "PRJNAME");
 
 	private Resources() {}
 
