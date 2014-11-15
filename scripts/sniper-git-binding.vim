@@ -36,6 +36,9 @@ function! BindGitStatusKeys()
 	nmap <buffer> D :call GitStatusDiff(1)<CR>
 	nmap <buffer> l :call GitStatusLog()<CR>
 	nmap <buffer> c :call GitStatusCommit()<CR>
+	nmap <buffer> o :call GitStatusOpen()<CR>
+	nmap <buffer> s :call GitStatusShow(0)<CR>
+	nmap <buffer> S :call GitStatusShow(1)<CR>
 	nmap <buffer> q <C-w>q
 endfunction
 
@@ -127,6 +130,28 @@ endfunction
 function! GitStatusCommit()
 	quit
 	Gcommit
+endfunction
+
+function! GitStatusOpen()
+	let line = GitStatusGetFile()
+	if !len(line)
+		echo 'Unrecognized status line.'
+		return 0
+	endif
+	let [istat, wstat, oldfn, newfn] = line
+	quit
+	exec 'vi ' . (len(newfn) ? newfn : oldfn)
+	return 1
+endfunction
+
+function! GitStatusShow(cached)
+	if GitStatusOpen()
+		let cmd = 'Gdiff'
+		if a:cached
+			let cmd .= ' --cached'
+		endif
+		exec cmd
+	endif
 endfunction
 
 nmap <silent> <Leader>GG :silent call ShowGitStatus()<CR>

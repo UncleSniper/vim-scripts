@@ -9,6 +9,10 @@
 	<property name="res" location="res"/>
 	<property name="binres" location="${bin}/BASEPKGDIR/resource"/>
 MANIFEST_PROPERTY
+WAR_PROPERTIES
+	<property name="api.doc.visibility" value="private"/>
+	<property name="javadoc.jre.package.list" location="jre6.packages"/>
+	<property name="javadoc.jre.url" value="http://docs.oracle.com/javase/6/docs/api/"/>
 
 	<path id="build.classpath">
 		<fileset dir="${lib}" includes="**/*.jar"/>
@@ -18,6 +22,8 @@ MANIFEST_PROPERTY
 	<target name="init">
 		<mkdir dir="${bin}"/>
 		<mkdir dir="${dist}/lib"/>
+		<mkdir dir="${doc}/api"/>
+WAR_INIT
 	</target>
 
 	<target name="compile" depends="init" description="compile the source">
@@ -38,13 +44,24 @@ MANIFEST_PROPERTY
 		<copy todir="${dist}/lib">
 			<fileset dir="${lib}">
 				<filename name="**/*.jar"/>
+SERVLET_LIB_EXCLUDE
 			</fileset>
 		</copy>
+	</target>
+WAR_TARGET
+
+	<target name="doc" depends="init" description="generate documentation">
+		<javadoc sourcepath="${src}" destdir="${doc}/api" classpathref="build.classpath"
+				Windowtitle="PRJNAME API" access="${api.doc.visibility}">
+			<link href="${javadoc.jre.url}" packagelistLoc="${javadoc.jre.package.list}"/>
+		</javadoc>
 	</target>
 
 	<target name="clean" description="clean up">
 		<delete dir="${bin}"/>
 		<delete dir="${dist}"/>
+WAR_CLEAN
+		<delete dir="${doc}/api"/>
 	</target>
 
 </project>

@@ -1,0 +1,10 @@
+
+	<target name="war" depends="dist" description="generate Tomcat warball">
+		<copy todir="${warbin}/WEB-INF/lib">
+			<fileset dir="${dist}">
+				<filename name="**/*.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="${warbin}/WEB-INF" file="web.xml"/>
+		<jar jarfile="${warpkg}" basedir="${warbin}"/>
+	</target>

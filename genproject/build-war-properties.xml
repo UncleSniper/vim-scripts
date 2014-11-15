@@ -1,0 +1,2 @@
+	<property name="warbin" location="warbin"/>
+	<property name="warpkg" location="${dist}/PRJNAME.war"/>

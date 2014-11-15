@@ -17,7 +17,7 @@ function! NewProject()
 		echo 'No name supplied, aborting.'
 		return
 	endif
-	if len(glob(name))
+	if len(glob(name, 1))
 		echo "File '" . name . "' already exists."
 		return
 	endif
@@ -33,7 +33,7 @@ endfunction
 let s:commonGitExcudes = ['.*.swp']
 
 function! CommonGenProjectHead(name)
-	call OpenInfoWindowHorizontal('bottom', &lines / 3, 'genprojectout')
+	call OpenInfoWindowHorizontal('bottom', &lines / 2, 'genprojectout')
 	file *gen-project*
 	setl nomodifiable
 	nmap <buffer> <CR> <C-w>q
@@ -96,8 +96,8 @@ endfunction
 
 function! LogGenProjectAction(action, argument)
 	let msg = toupper(a:action)
-	if len(msg) < 5
-		let msg .= repeat(' ', 5 - len(msg))
+	if len(msg) < 6
+		let msg .= repeat(' ', 6 - len(msg))
 	endif
 	if len(a:argument)
 		let msg .= ' ' . a:argument
@@ -116,8 +116,9 @@ endfunction
 
 let s:javaPackagePrefixes = []
 let s:javaProjectNameStrip = []
-let s:javaGitExcludes = ['/lib/*.jar', '/bin', '/dist']
+let s:javaGitExcludes = ['/lib/*.jar', '/bin', '/warbin', '/dist', '/doc/api']
 let s:javaDependLines = ['This component does not have any dependencies.']
+let s:javaDependLinesWAR = ['Place the Servlet API package (servlet-api.jar) into this directory.']
 
 function! AddJavaPackagePrefix(prefix)
 	call add(s:javaPackagePrefixes, a:prefix)
@@ -148,6 +149,15 @@ function! CompleteJavaProjectBasePackage(argLead, cmdLine, cursorPos)
 	return items
 endfunction
 
+function! CompleteJavaProjectServletClass(argLead, cmdLine, cursorPos)
+	let llen = len(a:argLead)
+	if llen >= 7 && strpart(a:argLead, llen - 7) == 'Servlet'
+		return [a:argLead, strpart(a:argLead, 0, llen - 7)]
+	else
+		return [a:argLead . 'Servlet', a:argLead]
+	endif
+endfunction
+
 function! NewJavaProject(name, modtype)
 	let s:javaProjectName = a:name
 	let pkg = input('Base package? ', '', 'customlist,CompleteJavaProjectBasePackage')
@@ -155,8 +165,10 @@ function! NewJavaProject(name, modtype)
 		echo 'No package name supplied, aborting.'
 		return
 	endif
-	if a:modtype == 1 || a:modtype == 3
+	if a:modtype == 1
 		let mainclass = input('Main class? ', '')
+	elseif a:modtype == 3
+		let mainclass = input('Servlet class? ', '', 'customlist,CompleteJavaProjectServletClass')
 	else
 		let mainclass = ''
 	endif
@@ -173,10 +185,17 @@ function! GenJavaProject(name, modtype, basepkg, mainclass)
 	if a:modtype == 1
 		call GenProjectFile('manifest.mf', ['Main-Class: ' . a:basepkg . '.' . a:mainclass], 1)
 	endif
+	" web.xml
+	if a:modtype == 3
+		call GenJavaWebXML(a:name, a:basepkg . '.' . a:mainclass)
+	endif
+	" jre6.packages
+	call GenProjectFileFromTemplate('jre6.packages', 'jre6.packages', {}, 0, 0)
 	" lib/
 	call LogGenProjectAction('mkdir', 'lib')
 	call mkdir('lib')
-	call GenProjectFile('lib/DEPEND', s:javaDependLines, 1)
+	call GenProjectFile('lib/DEPEND', a:modtype == 3 ? s:javaDependLinesWAR : s:javaDependLines, 1)
+	call GenProjectFileFromTemplate('java-depend.vim', 'lib/depend.vim', {'PRJNAME' : a:name}, 0, 0)
 	" src/
 	let srcdir = 'src/' . substitute(a:basepkg, '\.', '/', 'g')
 	call LogGenProjectAction('mkdir', srcdir)
@@ -202,7 +221,8 @@ function! GenAntBuildfile(prjname, basepkg, modtype)
 \		'BASEPKGDIR': substitute(a:basepkg, '\.', '/', 'g'),
 \		'MANIFEST_REFERENCE': a:modtype == 1 ? ' manifest="${manifest}"' : ''
 \	}, function('GenAntBuildfileResolve'), {
-\		'hasManifest': a:modtype == 1
+\		'hasManifest': a:modtype == 1,
+\		'makesWAR': a:modtype == 3
 \	})
 endfunction
 
@@ -212,6 +232,20 @@ function! GenAntBuildfileResolve(variables)
 		call GenProjectFileResolveMarker('MANIFEST_PROPERTY', 'build-manifest-property.xml')
 	else
 		call GenProjectFileKillMarker('MANIFEST_PROPERTY')
+	endif
+	" warball
+	if get(a:variables, 'makesWAR')
+		call GenProjectFileResolveMarker('WAR_PROPERTIES', 'build-war-properties.xml')
+		call GenProjectFileResolveMarker('WAR_INIT', 'build-war-init.xml')
+		call GenProjectFileResolveMarker('SERVLET_LIB_EXCLUDE', 'build-servlet-lib-exclude.xml')
+		call GenProjectFileResolveMarker('WAR_TARGET', 'build-war-target.xml')
+		call GenProjectFileResolveMarker('WAR_CLEAN', 'build-war-clean.xml')
+	else
+		call GenProjectFileKillMarker('WAR_PROPERTIES')
+		call GenProjectFileKillMarker('WAR_INIT')
+		call GenProjectFileKillMarker('SERVLET_LIB_EXCLUDE')
+		call GenProjectFileKillMarker('WAR_TARGET')
+		call GenProjectFileKillMarker('WAR_CLEAN')
 	endif
 endfunction
 
@@ -225,9 +259,70 @@ function! GenJavaResourcesClass(prjname, resdir, basepkg)
 \	}, 0, 0)
 endfunction
 
+function! GenJavaWebXML(prjname, mainclass)
+	let mcbase = substitute(a:mainclass, '.*\.', '', '')
+	call GenProjectFileFromTemplate('web.xml', 'web.xml', {
+\		'PRJNAME': a:prjname,
+\		'SERVLET_CLASS_BASE': mcbase,
+\		'SERVLET_CLASS_QNAME': a:mainclass
+\	}, 0, 0)
+endfunction
+
+" ========== dependencies ==========
+
+let s:dependVimFiles = ['lib/depend.vim']
+let s:javaDependencyModules = {}
+
+function! ImportAllDependencies()
+	call OpenInfoWindowHorizontal('bottom', &lines / 2, 'genprojectout')
+	file *import-depend*
+	setl nomodifiable
+	nmap <buffer> <CR> <C-w>q
+	for fname in s:dependVimFiles
+		if len(glob(fname, 1))
+		exec 'source ' . fnamemodify(fname, ':p')
+		endif
+	endfor
+	call LogGenProjectAction('note', 'Finished resolving dependencies.')
+endfunction
+
+function! ProvideJavaDependency(modname, libdir)
+	let s:javaDependencyModules[a:modname] = a:libdir
+endfunction
+
+function! ImportJavaDependency(modname)
+	if !has_key(s:javaDependencyModules, a:modname)
+		call LogGenProjectAction('error', 'Unresolved dependency: ' . a:modname)
+		return
+	endif
+	call ImportJavaLibrariesFrom(s:javaDependencyModules[a:modname])
+endfunction
+
+function! ImportJavaLibrariesFrom(srcdir)
+	if !len(glob(a:srcdir, 1))
+		return
+	endif
+	if isdirectory(a:srcdir)
+		for child in split(glob(a:srcdir . '/*', 1), "\n")
+			call ImportJavaLibrariesFrom(child)
+		endfor
+	elseif a:srcdir =~? '\.jar$'
+		let dest = 'lib/' . fnamemodify(a:srcdir, ':t')
+		if getftime(a:srcdir) > getftime(dest)
+			call LogGenProjectAction('import', dest)
+			exec 'silent !cp ' . shellescape(a:srcdir) . ' ' . shellescape(dest)
+		endif
+	endif
+endfunction
+
 " ========== commands ==========
 
 command! Proj call NewProject()
 
 command! -nargs=1 AddJavaPackagePrefix call AddJavaPackagePrefix('<args>')
 command! -nargs=1 AddJavaProjectNameStrip call AddJavaProjectNameStrip('<args>')
+
+command! Depend call ImportAllDependencies()
+
+command! -nargs=1 RequireJavaLibrary call ImportJavaDependency('<args>')
+command! -nargs=+ ProvideJavaLibrary call ProvideJavaDependency(<f-args>)

@@ -1,4 +1,4 @@
-function! GetOutputOf(argv)
+function! GetOutputOf(argv, ignoreStatus)
 	let cmd = ''
 	for word in a:argv
 		if len(cmd)
@@ -8,7 +8,11 @@ function! GetOutputOf(argv)
 	endfor
 	new
 	setl buftype=nofile bufhidden=wipe nobuflisted noswapfile nowrap
-	exec 'read !' . cmd
+	let cmd = 'read !' . cmd
+	if a:ignoreStatus
+		let cmd = 'silent ' . cmd
+	endif
+	exec cmd
 	let output = []
 	for lnr in range(2, line('$'))
 		call add(output, getline(lnr))
@@ -18,8 +22,8 @@ function! GetOutputOf(argv)
 endfunction
 
 function! GetGitTag()
-	if len(GetOutputOf(['git', 'tag']))
-		return get(GetOutputOf(['git', 'describe', '--tags']), 0)
+	if len(GetOutputOf(['git', 'tag'], 0))
+		return get(GetOutputOf(['git', 'describe', '--tags'], 0), 0)
 	else
 		return 'v0.1'
 	endif
