@@ -19,3 +19,7 @@ typedef struct ${1} {
 	${0}
 } ${1///}_t;
 endsnippet
+
+snippet fntype "function typedef"
+typedef ${1:<return type>} (*${2:<name>}_t)(${3});${0}
+endsnippet
