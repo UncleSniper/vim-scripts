@@ -21,5 +21,7 @@ typedef struct ${1} {
 endsnippet
 
 snippet fntype "function typedef"
-typedef ${1:<return type>} (*${2:<name>}_t)(${3});${0}
+typedef ${1:void} (*${2:<name>}_t)(
+	${3}
+);${0}
 endsnippet
