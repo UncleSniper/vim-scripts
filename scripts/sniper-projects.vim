@@ -6,3 +6,5 @@ au BufRead,BufNewFile /home/cloud/cshift/compcore/src/*.c imap <buffer> \c CSHIF
 
 " man pages
 au BufRead,BufNewFile man/man*/*.[1-8] nmap <buffer> <Leader>s :!man %<CR>
+" grammar
+au BufRead,BufNewFile grammar*.txt setl tw=0
