@@ -20,6 +20,12 @@ typedef struct ${1} {
 } ${1///}_t;
 endsnippet
 
+snippet enum "enum typedef"
+typedef enum ${1} {
+	${0}
+} ${1///}_t;
+endsnippet
+
 snippet fntype "function typedef"
 typedef ${1:void} (*${2:<name>}_t)(
 	${3}
