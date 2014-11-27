@@ -12,6 +12,10 @@ snippet pr "private"
 private ${0}
 endsnippet
 
+snippet ab "abstract"
+abstract ${0}
+endsnippet
+
 snippet cl "class"
 class ${1:`!p snip.rv = snip.basename`} ${2/.+/extends /}${2}${2/.+/ /}${3/.+/implements /}${3}${3/.+/ /}{
 
