@@ -1,3 +1,5 @@
+let g:javaGenCodePlayNiceWithDelimitMate = 1
+
 let s:qnamePattern = '\I\i*\%(\.\I\i*\)*'
 let s:typePattern = s:qnamePattern . '\%(<' . s:qnamePattern . '\%(, ' . s:qnamePattern . '\)*>\)\?'
 let s:typeListPattern = s:typePattern . '\%(, ' . s:typePattern . '\)*'
@@ -155,8 +157,12 @@ function! JavaGenerateAccessorsImpl(lno, kinds)
 			if isStatic && len(class)
 				let keys .= class . '.'
 			endif
-			let keys .= name . ";\<CR>"
-			let keys .= JavaUnindentIfNeeded(indent) . "}\<Esc>\<CR>\<CR>"
+			let keys .= name . ';'
+			if !g:javaGenCodePlayNiceWithDelimitMate
+				let keys .= "\<CR>" . JavaUnindentIfNeeded(indent) . "}\<Esc>\<CR>\<CR>"
+			else
+				let keys .= "\<Esc>\<CR>\<CR>\<CR>"
+			endif
 		elseif kind == 's' && !isFinal
 			let keys .= "O\<Esc>O" . indent
 			let keys .= 'public '
@@ -170,8 +176,12 @@ function! JavaGenerateAccessorsImpl(lno, kinds)
 			elseif len(class)
 				let keys .= class . '.'
 			endif
-			let keys .= name . ' = ' . name . ";\<CR>"
-			let keys .= JavaUnindentIfNeeded(indent) . "}\<Esc>\<CR>\<CR>"
+			let keys .= name . ' = ' . name . ';'
+			if !g:javaGenCodePlayNiceWithDelimitMate
+				let keys .= "\<CR>" . JavaUnindentIfNeeded(indent) . "}\<Esc>\<CR>\<CR>"
+			else
+				let keys .= "\<Esc>\<CR>\<CR>\<CR>"
+			endif
 		endif
 	endfor
 	return keys
@@ -260,6 +270,10 @@ function! JavaGenerateConstructor()
 		endif
 	endfor
 	let keys .= ') {'
-	let assignments .= "\<CR>" . JavaUnindentIfNeeded(indent) . "}\<Esc>"
+	if !g:javaGenCodePlayNiceWithDelimitMate
+		let assignments .= "\<CR>" . JavaUnindentIfNeeded(indent) . "}\<Esc>"
+	else
+		let assignments .= "\<Esc>\<CR>"
+	endif
 	return keys . assignments
 endfunction
