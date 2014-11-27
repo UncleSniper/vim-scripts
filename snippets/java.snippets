@@ -149,3 +149,7 @@ package ${1:`!v substitute(substitute(expand('%:h'), '^src/', '', ''), '/', '.',
 
 ${0}
 endsnippet
+
+snippet for "for loop"
+for(${1};${2/.+/ /}${2};${3/.+/ /}${3})${0}
+endsnippet
