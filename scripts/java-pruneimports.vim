@@ -12,7 +12,7 @@ endfunction
 
 function! JavaHasTypeDefinition(name)
 	for lnr in range(1, line('$'))
-		let l = JavaStripStrings(getline(lnr))
+		let l = JavaStripComment(JavaStripStrings(getline(lnr)))
 		if match(l, '\<\%(class\|enum\) ' . EscapeFromSubstPattern(a:name) . '\>') >= 0
 			return 1
 		endif
@@ -69,6 +69,10 @@ function! JavaStripStrings(data)
 	return substitute(a:data, '"\%([^"\\]\|\\.\)*"', '', 'g')
 endfunction
 
+function! JavaStripComment(data)
+	return substitute(a:data, '//.*$', '', '')
+endfunction
+
 function! JavaGenImports()
 	let oriline = line('.')
 	let oricol = col('.')
@@ -78,7 +82,7 @@ function! JavaGenImports()
 		if JavaIsPackageDeclaration(l) || JavaIsImport(l)
 			continue
 		endif
-		let l = JavaStripStrings(l)
+		let l = JavaStripComment(JavaStripStrings(l))
 		let start = 0
 		while 1
 			let pos = match(l, '\<[A-Z]\w\w\+\>', start)
