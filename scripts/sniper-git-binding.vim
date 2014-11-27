@@ -39,6 +39,7 @@ function! BindGitStatusKeys()
 	nmap <buffer> o :call GitStatusOpen()<CR>
 	nmap <buffer> s :call GitStatusShow(0)<CR>
 	nmap <buffer> S :call GitStatusShow(1)<CR>
+	nmap <buffer> E :call GitStatusExclude()<CR>
 	nmap <buffer> q <C-w>q
 endfunction
 
@@ -49,6 +50,7 @@ function! UnbindGitStatusKeys()
 	nunmap <buffer> d
 	nunmap <buffer> D
 	nunmap <buffer> c
+	nunmap <buffer> E
 	nunmap <buffer> q
 endfunction
 
@@ -152,6 +154,30 @@ function! GitStatusShow(cached)
 		endif
 		exec cmd
 	endif
+endfunction
+
+function! GitStatusExclude()
+	let line = GitStatusGetFile()
+	if !len(line)
+		echo 'Unrecognized status line.'
+	else
+		let [istat, wstat, oldfn, newfn] = line
+		let status = istat . wstat
+		if status == '??'
+			call GitAddExclude(oldfn)
+			call UpdateGitStatus()
+		else
+			echo 'File is not untracked.'
+		endif
+	endif
+endfunction
+
+function! GitAddExclude(path)
+	vsplit
+	vi .git/info/exclude
+	call append(line('$'), a:path)
+	write
+	quit
 endfunction
 
 nmap <silent> <Leader>GG :silent call ShowGitStatus()<CR>
