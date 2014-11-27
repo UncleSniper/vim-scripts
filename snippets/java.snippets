@@ -135,3 +135,9 @@ switch(${1:<value>}) {
 	${0}
 }
 endsnippet
+
+snippet pkg "package"
+package ${1:`!v substitute(substitute(expand('%:h'), '^src/', '', ''), '/', '.', 'g')`};
+
+${0}
+endsnippet
