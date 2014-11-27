@@ -10,7 +10,7 @@ let s:fieldDeclPattern .= '\(' . s:typePattern . '\) \(\I\i*\)\%(;\| =\)'
 
 let s:implementsPattern = '^[ \t]*\%(implements \)\?' . s:typeListPattern . '\%( {\)\?$'
 let s:classDefPattern =  '^[ \t]*\%(public \|protected \|private \)\?'
-let s:classDefPattern .= '\%(static \|final \)*\%(class\|enum\) \(\I\i*\)'
+let s:classDefPattern .= '\%(static \|final \|abstract \)*\%(class\|enum\) \(\I\i*\)'
 let s:classDefPattern .= '\%( extends ' . s:typePattern . '\)\?'
 let s:classDefPattern .= '\%( implements ' . s:typeListPattern . '\)\?'
 let s:classDefPattern .= '\%( {\)\?$'
