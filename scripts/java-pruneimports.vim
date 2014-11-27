@@ -86,7 +86,6 @@ function! JavaGenImports()
 			let start = pos + len(sname)
 		endwhile
 	endfor
-	call OpenInfoWindowHorizontal('bottom', 20, 'none')
 	for type in keys(types)
 		if !JavaHasImportForSimple(type) && !JavaHasTypeDefinition(type)
 			call JavaGenImportForSimple(type)
@@ -126,13 +125,37 @@ function! JavaGenImportForSimple(name)
 endfunction
 
 function! JavaGenImportForQualified(name)
-	call LogGenProjectAction('candidate', a:name)
 	let lastimp = 0
+	let insertnewlines = 0
+	let pkgline = 0
+	let apdata = 'import ' . a:name . ';'
 	for lnr in range(1, line('$'))
 		let l = getline(lnr)
-		if match(l, '^\s*$') >= 0 || JavaIsPackageDeclaration(l)
+		if match(l, '^\s*$') >= 0
 			continue
 		endif
-		"TODO
+		if JavaIsPackageDeclaration(l)
+			let pkgline = lnr
+			continue
+		endif
+		if !JavaIsImport(l)
+			if lastimp
+				call append(lastimp, apdata)
+			elseif pkgline
+				call append(pkgline, ['', apdata])
+			else
+				call append(0, [apdata, ''])
+			endif
+			return
+		else
+			if len(l) > len(apdata)
+				call append(lnr - 1, apdata)
+				return
+			endif
+			let lastimp = lnr
+		endif
 	endfor
+	" No non-package, non-import lines?
+	" Then how did we even get here...?
+	call append(line('$'), apdata)
 endfunction
