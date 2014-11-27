@@ -20,6 +20,10 @@ function! JavaHasTypeDefinition(name)
 	return 0
 endfunction
 
+function! JavaHasClassInThisPackage(name)
+	return filereadable(expand('%:h') .'/' . a:name . '.java')
+endfunction
+
 function! JavaIsImportUsed(sname)
 	call cursor(1, 1)
 	let pat = '\<' . a:sname . '\>'
@@ -87,7 +91,7 @@ function! JavaGenImports()
 		endwhile
 	endfor
 	for type in keys(types)
-		if !JavaHasImportForSimple(type) && !JavaHasTypeDefinition(type)
+		if !JavaHasImportForSimple(type) && !JavaHasTypeDefinition(type) && !JavaHasClassInThisPackage(type)
 			call JavaGenImportForSimple(type)
 		endif
 	endfor
