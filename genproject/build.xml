@@ -10,6 +10,7 @@
 	<property name="binres" location="${bin}/BASEPKGDIR/resource"/>
 MANIFEST_PROPERTY
 WAR_PROPERTIES
+	<property name="doc" location="doc"/>
 	<property name="api.doc.visibility" value="private"/>
 	<property name="javadoc.jre.package.list" location="jre6.packages"/>
 	<property name="javadoc.jre.url" value="http://docs.oracle.com/javase/6/docs/api/"/>
