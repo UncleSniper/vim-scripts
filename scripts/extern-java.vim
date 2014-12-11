@@ -8,6 +8,7 @@ let delimitMate_expand_cr = 1
 let delimitMate_expand_space = 1
 
 nmap <Leader>d :NERDTreeToggle<CR>
+let g:NERDTreeWinSize = 50
 
 let g:ctrlp_map = "<Leader>t"
 set wildignore+=*/bin/**
