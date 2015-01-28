@@ -9,6 +9,7 @@ let delimitMate_expand_space = 1
 
 nmap <Leader>d :NERDTreeToggle<CR>
 let g:NERDTreeWinSize = 50
+let g:NERDTreeIgnore = ['\.o$', '\.hi$']
 
 let g:ctrlp_map = "<Leader>t"
 set wildignore+=*/bin/**
