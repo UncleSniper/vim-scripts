@@ -6,7 +6,7 @@ ${0}
 endsnippet
 
 snippet grd "guard macro"
-#ifndef ${1:`!v toupper(fnamemodify(getcwd(), ':t') . '_' . substitute(substitute(expand('%'), '^src/', '', ''), '[^a-zA-Z0-9]\+', '_', 'g'))`}
+#ifndef ${1:`!v toupper(substitute(fnamemodify(getcwd(), ':t') . '_' . substitute(expand('%'), '^src/', '', ''), '[^a-zA-Z0-9]\+', '_', 'g'))`}
 #define ${1///}
 
 ${0}
