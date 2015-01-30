@@ -110,6 +110,12 @@ function! JavaGenImportForSimple(name)
 		return
 	endif
 	let candidates = GetOutputOf(['grep', '-E', '\.' . a:name . '$', lstf], 1)
+	let local = JavaGetProjectClasses()
+	for class in local
+		if match(class, '\.' . a:name . '$') >= 0
+			call add(candidates, class)
+		endif
+	endfor
 	if !len(candidates)
 		return
 	endif
@@ -168,4 +174,16 @@ function! JavaGenImportForQualified(name)
 	" No non-package, non-import lines?
 	" Then how did we even get here...?
 	call append(line('$'), apdata)
+endfunction
+
+function! JavaGetProjectClasses()
+	let filelst = GetOutputOf(['find', 'src', '-name', '*.java'], 1)
+	let classes = []
+	for fname in filelst
+		let cname = substitute(fname, '^src/', '', '')
+		let cname = substitute(cname, '\.java$', '', '')
+		let cname = substitute(cname, '/', '.', 'g')
+		call add(classes, cname)
+	endfor
+	return classes
 endfunction
