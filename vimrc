@@ -15,6 +15,7 @@ runtime scripts/sniper-projects.vim
 runtime scripts/sniper-git-binding.vim
 runtime scripts/sniper-genproject.vim
 runtime scripts/snippet-callbacks.vim
+runtime scripts/abbrevs.vim
 
 " language-specific stuff
 runtime scripts/sniper-java.vim

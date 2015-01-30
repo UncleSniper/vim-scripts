@@ -170,3 +170,12 @@ endsnippet
 snippet for "for loop"
 for(${1};${2/.+/ /}${2};${3/.+/ /}${3})${0}
 endsnippet
+
+snippet i18 "acquire I18N object"
+I18N _ = I18N.by(localization);
+${0}
+endsnippet
+
+snippet _ "localize string"
+_.get(${1:`!p snip.rv = snip.basename`}.RES_${2:<resource>})${0}
+endsnippet
