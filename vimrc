@@ -6,6 +6,7 @@ runtime scripts/java-fold.vim
 runtime scripts/java-pruneimports.vim
 runtime scripts/java-gencode.vim
 runtime scripts/newblock.vim
+runtime scripts/java-utils.vim
 
 " global stuff
 runtime scripts/sniper-common-actions.vim

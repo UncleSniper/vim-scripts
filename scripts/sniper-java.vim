@@ -8,6 +8,7 @@ function! SetupJavaScripts()
 	nmap <buffer> <expr> <Leader>gc JavaGenerateConstructor()
 	nmap <buffer> <silent> <Leader>pi :call JavaPruneImports()<CR>
 	nmap <buffer> <Leader>gi :call JavaGenImports()<CR>
+	nmap <buffer> <expr> <Leader>fc JavaEqualizeConstantAssignments()
 	" compiler junk
 	setl makeprg=vimant
 	setl efm=\ \ \ \ %f:%l:%c:\ %m
