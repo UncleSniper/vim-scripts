@@ -91,7 +91,9 @@ function! JavaGenImports()
 			endif
 			let sname = get(matchlist(l, '\<[A-Z]\w\w\+\>', start), 0)
 			if match(sname, '^[A-Z]\+$')
-				let types[sname] = 1
+				if !pos || strpart(l, pos - 1, 1) != '.'
+					let types[sname] = 1
+				endif
 			endif
 			let start = pos + len(sname)
 		endwhile
