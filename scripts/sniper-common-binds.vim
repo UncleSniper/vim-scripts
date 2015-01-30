@@ -21,7 +21,8 @@ nmap <silent> <Leader>e :cn<CR>
 imap <C-l> l
 
 " programming stuff
-imap <C-b> {<CR>}<C-o>O<Tab>
+"imap <C-b> {<CR>}<C-o>O<Tab>
+imap <C-b> {<CR><Tab>
 imap <expr> <C-]> InsertNewBlock()
 nmap <C-p> }<CR>
 
