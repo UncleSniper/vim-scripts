@@ -7,7 +7,7 @@ function! JavaIsPackageDeclaration(data)
 endfunction
 
 function! JavaHasImportForSimple(name)
-	return search('^import\s\+\h\w*\(\.\h\w*\)\.\<' . EscapeFromSubstPattern(a:name) . '\>\s*;\s*$', 'cnw')
+	return search('^import\s\+\h\w*\(\.\h\w*\)*\.\<' . EscapeFromSubstPattern(a:name) . '\>\s*;\s*$', 'cnw')
 endfunction
 
 function! JavaHasTypeDefinition(name)
