@@ -28,6 +28,7 @@ nmap <C-p> }<CR>
 
 " generic stuff
 nmap <Leader>s :vsp<CR>
+nmap <Leader>S :sp<CR>
 nmap <expr> <Leader>W CleanUpWhitespace()
 nmap <expr> <Leader>N NewFileInteractive()
 
