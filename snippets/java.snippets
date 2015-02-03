@@ -119,6 +119,22 @@ case ${1:<constant>}:
 	break;
 endsnippet
 
+snippet casr "case return"
+case ${1:<constant>}:
+	return ${2:null};${0}
+endsnippet
+
+snippet def "default"
+default:
+	${0}
+	break;
+endsnippet
+
+snippet defr "default return"
+default:
+	return ${1:null};${0}
+endsnippet
+
 snippet ifeq "if equals"
 if(${1:<value>}.equals(${2:<constant>}))${0}
 endsnippet

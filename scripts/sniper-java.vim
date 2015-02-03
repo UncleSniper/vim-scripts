@@ -9,6 +9,9 @@ function! SetupJavaScripts()
 	nmap <buffer> <silent> <Leader>pi :call JavaPruneImports()<CR>
 	nmap <buffer> <Leader>gi :call JavaGenImports()<CR>
 	nmap <buffer> <expr> <Leader>fc JavaEqualizeConstantAssignments()
+	imap <buffer> <expr> <C-e> JavaEmbrace()
+	imap <buffer> <expr> <C-_> JavaNewBranch(0)
+	imap <buffer> <expr>  JavaNewBranch(1)
 	" compiler junk
 	setl makeprg=vimant
 	setl efm=\ \ \ \ %f:%l:%c:\ %m

@@ -11,6 +11,15 @@ function! GetIndentOf(lineData)
 	endif
 endfunction
 
+function! GetIndentLevelOf(lineData)
+	let pos = match(a:lineData, '\S')
+	if pos < 0
+		return len(a:lineData)
+	else
+		return pos
+	endif
+endfunction
+
 function! InsertNewBlock()
 	let here = line('.')
 	if here == 1
