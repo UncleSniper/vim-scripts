@@ -1,5 +1,5 @@
 let s:resPattern = '^\t*\%(public\|protected\|private\) static final String '
-let s:resPattern .= 'RES_[A-Z0-9]\+_[A-Z0-9]\+ = "[^".]\+\.[^".]\+\.\([^".]\+\)\.[^".]\+";$'
+let s:resPattern .= 'RES_[A-Z0-9]\+_[A-Z0-9]\+ \+= "[^".]\+\.[^".]\+\.\([^".]\+\)\.[^".]\+";$'
 
 function! JavaSnippetGetPrevResourceMethod()
 	let lnr = line('.')
