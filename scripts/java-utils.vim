@@ -93,7 +93,7 @@ function! JavaEmbrace()
 endfunction
 
 function! s:IsKeyword(lnr, keyword)
-	return match(getline(a:lnr), '^\t*' . keyword . '\>') >= 0
+	return match(getline(a:lnr), '^\t*' . a:keyword . '\>') >= 0
 endfunction
 
 function! JavaNewBranch(isCatch)
@@ -146,6 +146,9 @@ function! s:NewIfBranch(oldBranchLine, isCatch)
 	let level = GetIndentLevelOf(getline(a:oldBranchLine))
 	let bottomln = s:GetBranchBottom(a:oldBranchLine)
 	let keys = "\<Esc>" . bottomln . "Go\<Esc>i" . repeat("\t", level)
-	"TODO
-	return ''
+	if a:isCatch
+		return keys . "else\<CR>\<Tab>"
+	else
+		return keys . "else if\<Tab>"
+	endif
 endfunction
