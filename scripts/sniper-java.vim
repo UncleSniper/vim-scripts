@@ -11,7 +11,7 @@ function! SetupJavaScripts()
 	nmap <buffer> <expr> <Leader>fc JavaEqualizeConstantAssignments()
 	imap <buffer> <expr> <C-e> JavaEmbrace()
 	imap <buffer> <expr> <C-_> JavaNewBranch(0)
-	imap <buffer> <expr>  JavaNewBranch(1)
+	imap <buffer> <expr> <C-f> JavaNewBranch(1)
 	" compiler junk
 	setl makeprg=vimant
 	setl efm=\ \ \ \ %f:%l:%c:\ %m
