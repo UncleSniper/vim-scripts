@@ -90,7 +90,7 @@ function! JavaGenImports()
 				break
 			endif
 			let sname = get(matchlist(l, '\<[A-Z]\w\w\+\>', start), 0)
-			if match(sname, '^[A-Z]\+$')
+			if match(sname, '^[A-Z_]\+$')
 				if !pos || strpart(l, pos - 1, 1) != '.'
 					let types[sname] = 1
 				endif
@@ -98,22 +98,22 @@ function! JavaGenImports()
 			let start = pos + len(sname)
 		endwhile
 	endfor
+	let local = JavaGetProjectClasses()
 	for type in keys(types)
 		if !JavaHasImportForSimple(type) && !JavaHasTypeDefinition(type) && !JavaHasClassInThisPackage(type)
-			call JavaGenImportForSimple(type)
+			call JavaGenImportForSimple(type, local)
 		endif
 	endfor
 	call cursor(oriline, oricol)
 endfunction
 
-function! JavaGenImportForSimple(name)
+function! JavaGenImportForSimple(name, local)
 	let lstf = expand('~/.vim/javatypes.lst')
 	if !len(glob(lstf))
 		return
 	endif
 	let candidates = GetOutputOf(['grep', '-E', '\.' . a:name . '$', lstf], 1)
-	let local = JavaGetProjectClasses()
-	for class in local
+	for class in a:local
 		if match(class, '\.' . a:name . '$') >= 0
 			call add(candidates, class)
 		endif
