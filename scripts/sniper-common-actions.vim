@@ -14,3 +14,7 @@ endfunction
 function! NewFileInteractive()
 	return ':vi ' . expand('%:h') . '/.' . expand('%:t:e') . repeat("\<Left>", len(expand('%:t:e')) + 1)
 endfunction
+
+function! OpenFileInteractive()
+	return ':vi ' . expand('%:h') . '/'
+endfunction

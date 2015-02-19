@@ -31,6 +31,7 @@ nmap <Leader>s :vsp<CR>
 nmap <Leader>S :sp<CR>
 nmap <expr> <Leader>W CleanUpWhitespace()
 nmap <expr> <Leader>N NewFileInteractive()
+nmap <expr> <Leader>O OpenFileInteractive()
 imap <C-l> <End>
 
 " common, but optional
