@@ -37,5 +37,5 @@ imap <C-l> <End>
 function! BindSemicolonLanguage()
 	inoremap ; <End>;
 	inoremap ;<BS> ;
-	inoremap ;; <End>
+	"inoremap ;; <End>
 endfunction
