@@ -25,6 +25,7 @@ runtime scripts/sniper-java.vim
 call pathogen#infect()
 
 " language-specific stuff managed by package manager
+runtime scripts/extern-common.vim
 runtime scripts/extern-java.vim
 
 " things to do on startup
