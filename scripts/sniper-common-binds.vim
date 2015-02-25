@@ -14,7 +14,8 @@ noremap <silent> <Leader><Leader> :BufExplorer<CR>
 "noremap <silent> <C-p> :bp<CR>
 
 " languages may override
-nmap <silent> <Leader>m :make<Space>\|<Space>cwindow<CR>
+"nmap <silent> <Leader>m :make<Space>\|<Space>cwindow<CR>
+nmap <silent> <Leader>m :<C-U>call MakeWrapper()<CR>
 nmap <silent> <Leader>e :cn<CR>
 
 " gah

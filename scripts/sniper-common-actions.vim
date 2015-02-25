@@ -18,3 +18,12 @@ endfunction
 function! OpenFileInteractive()
 	return ':vi ' . expand('%:h') . '/'
 endfunction
+
+function! MakeWrapper()
+	if v:count
+		exec 'make ' . v:count
+	else
+		make
+	endif
+	cwindow
+endfunction
