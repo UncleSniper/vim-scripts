@@ -20,6 +20,7 @@ runtime scripts/abbrevs.vim
 
 " language-specific stuff
 runtime scripts/sniper-java.vim
+runtime scripts/sniper-cpp.vim
 runtime scripts/sniper-latex.vim
 
 " now the bundle manager can do its thing
