@@ -34,6 +34,7 @@ nmap <expr> <Leader>W CleanUpWhitespace()
 nmap <expr> <Leader>N NewFileInteractive()
 nmap <expr> <Leader>O OpenFileInteractive()
 imap <C-l> <End>
+imap <C-q> <C-o>O<Tab>
 
 " common, but optional
 function! BindSemicolonLanguage()
