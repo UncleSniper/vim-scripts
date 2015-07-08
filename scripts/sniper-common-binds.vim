@@ -35,7 +35,7 @@ nmap <expr> <Leader>N NewFileInteractive()
 nmap <expr> <Leader>O OpenFileInteractive()
 imap <C-l> <End>
 imap <C-q> <C-o>O<Tab>
-imap <C-x> <Esc>O<CR>
+imap <C-z> <Esc>O<CR>
 
 " common, but optional
 function! BindSemicolonLanguage()
