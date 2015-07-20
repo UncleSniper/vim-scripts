@@ -39,7 +39,7 @@ imap <C-z> <Esc>O<CR>
 
 " common, but optional
 function! BindSemicolonLanguage()
-	inoremap ; <End>;
-	inoremap ;<BS> ;
+	inoremap <buffer> ; <End>;
+	inoremap <buffer> ;<BS> ;
 	"inoremap ;; <End>
 endfunction
