@@ -24,6 +24,10 @@ function! JavaHasClassInThisPackage(name)
 	return filereadable(expand('%:h') .'/' . a:name . '.java')
 endfunction
 
+function! JavaIsCommentedLine(data)
+	return match(a:data, '^\s*//') >= 0
+endfunction
+
 function! JavaIsImportUsed(sname)
 	call cursor(1, 1)
 	let pat = '\<' . a:sname . '\>'
@@ -32,7 +36,7 @@ function! JavaIsImportUsed(sname)
 		if !lnr
 			return 0
 		endif
-		if !JavaIsImport(getline(lnr))
+		if !JavaIsImport(getline(lnr)) && !JavaIsCommentedLine(getline(lnr))
 			return 1
 		endif
 	endwhile
