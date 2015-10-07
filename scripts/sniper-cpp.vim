@@ -1,6 +1,8 @@
+let g:xakeprg = 'xake'
+
 function! SetupCPPScripts()
 	if len(glob('project.properties'))
-		setl makeprg=xake
+		exec 'setl makeprg=' . g:xakeprg
 	endif
 endfunction
 
