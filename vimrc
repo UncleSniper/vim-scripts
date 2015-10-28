@@ -22,6 +22,7 @@ runtime scripts/abbrevs.vim
 runtime scripts/sniper-java.vim
 runtime scripts/sniper-cpp.vim
 runtime scripts/sniper-latex.vim
+runtime scripts/sniper-flexipl.vim
 
 " now the bundle manager can do its thing
 call pathogen#infect()
