@@ -1,3 +1,3 @@
-if &columns == 241
-	vsplit
-endif
+"if &columns == 241
+"	vsplit
+"endif
