@@ -20,6 +20,16 @@ function! OpenFileInteractive()
 endfunction
 
 function! MakeWrapper()
+	if exists('b:makeFunc')
+		if len(b:makeFunc)
+			exec 'call ' . b:makeFunc . '()'
+			return
+		endif
+	endif
+	call RealMakeWrapper()
+endfunction
+
+function! RealMakeWrapper()
 	if v:count
 		exec 'make ' . v:count
 	else

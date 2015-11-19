@@ -24,6 +24,9 @@ runtime scripts/sniper-cpp.vim
 runtime scripts/sniper-latex.vim
 runtime scripts/sniper-flexipl.vim
 
+" project-specific stuff
+runtime scripts/redstrain-actions.vim
+
 " now the bundle manager can do its thing
 call pathogen#infect()
 
