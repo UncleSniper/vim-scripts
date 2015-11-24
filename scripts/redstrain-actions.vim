@@ -37,6 +37,9 @@ function! SniperRedStrainMake_MessageSpecification()
 	endif
 	let lower = tolower(blobName)
 	let capital = toupper(strpart(blobName, 0, 1)) . tolower(strpart(blobName, 1))
+	if capital == 'Io'
+		let capital = 'IO'
+	endif
 	let upper = toupper(blobName)
 	let ktype = 'redengine::' . lower . '::l10n::' . capital . 'ModuleMessageKey'
 	let guard = 'REDSTRAIN_' . toupper(b:rsCompType) . '_' . upper . '_L10N_' . upper . 'MODULEMESSAGEKEY_HPP'
