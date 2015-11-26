@@ -24,6 +24,10 @@ runtime scripts/sniper-cpp.vim
 runtime scripts/sniper-latex.vim
 runtime scripts/sniper-flexipl.vim
 
+" evaluation stuff
+runtime scripts/sniper-eval-binding.vim
+runtime scripts/postgresql-evaluator.vim
+
 " project-specific stuff
 runtime scripts/redstrain-actions.vim
 

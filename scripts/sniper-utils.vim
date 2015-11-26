@@ -1,4 +1,8 @@
 function! GetOutputOf(argv, ignoreStatus)
+	return GetOutputOfWithInput(a:argv, a:ignoreStatus, '')
+endfunction
+
+function! GetOutputOfWithInput(argv, ignoreStatus, stdinFile)
 	let cmd = ''
 	for word in a:argv
 		if len(cmd)
@@ -7,8 +11,11 @@ function! GetOutputOf(argv, ignoreStatus)
 		let cmd .= shellescape(word)
 	endfor
 	new
-	setl buftype=nofile bufhidden=wipe nobuflisted noswapfile nowrap
+	setl buftype=nofile bufhidden=wipe nobuflisted noswapfile nowrap shellredir=>&
 	let cmd = 'read !' . cmd
+	if len(a:stdinFile)
+		let cmd .= ' <' . shellescape(a:stdinFile)
+	endif
 	if a:ignoreStatus
 		let cmd = 'silent ' . cmd
 	endif
