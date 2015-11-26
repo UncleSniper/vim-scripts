@@ -58,6 +58,7 @@ function! SniperOpenConsole(side, height, name, syntax, evaluator, filter)
 	exec 'file ' . a:name
 	imap <buffer> <silent> <BSlash><CR> <Esc>:silent call SniperEvalFile('')<CR>Go
 	imap <buffer> <C-Q> <Esc><C-W><C-Q>
+	imap <buffer> <C-]> <Esc><C-W>oi
 endfunction
 
 function! SniperDefaultEvalFilter(line)
