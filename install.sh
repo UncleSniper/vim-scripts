@@ -3,7 +3,7 @@
 set -e
 here="$(dirname -- "$(readlink -f -- "$0")")"
 mkdir -p ~/.vim/{autoload,bundle,syntax}
-wget https://github.com/tpope/vim-pathogen/raw/master/autoload/pathogen.vim -O ~/.vim/autoload
+wget https://github.com/tpope/vim-pathogen/raw/master/autoload/pathogen.vim -O ~/.vim/autoload/pathogen.vim
 bash -- "$here/DEPEND"
 ln -s -- "$here/snippets" ~/.vim/UltiSnips
 ln -s -- "$here/snippets" ~/.vim/usnippets
