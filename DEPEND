@@ -1,11 +1,11 @@
 set -e
 cd ~/.vim/bundle
-git clone https://github.com/jlanzarotta/bufexplorer.git
-git clone https://github.com/kien/ctrlp.vim
-git clone https://github.com/Raimondi/delimitMate.git
-git clone https://github.com/scrooloose/nerdtree
-git clone https://github.com/ervandew/supertab.git
-git clone https://github.com/SirVer/ultisnips.git
-git clone https://github.com/tpope/vim-fugitive.git
-git clone https://github.com/airblade/vim-rooter.git
-git clone https://github.com/tpope/vim-unimpaired.git
+[ -d bufexplorer ] || git clone https://github.com/jlanzarotta/bufexplorer.git
+[ -d ctrlp.vim ] || git clone https://github.com/kien/ctrlp.vim
+[ -d delimitMate ] || git clone https://github.com/Raimondi/delimitMate.git
+[ -d nerdtree ] || git clone https://github.com/scrooloose/nerdtree
+[ -d supertab ] || git clone https://github.com/ervandew/supertab.git
+[ -d ultisnips ] || git clone https://github.com/SirVer/ultisnips.git
+[ -d vim-fugitive ] || git clone https://github.com/tpope/vim-fugitive.git
+[ -d vim-rooter ] || git clone https://github.com/airblade/vim-rooter.git
+[ -d vim-unimpaired ] || git clone https://github.com/tpope/vim-unimpaired.git
