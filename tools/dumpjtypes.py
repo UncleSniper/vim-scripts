@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-import sys, subprocess, re
+import sys, subprocess, re, os
 
 CLASS_RE = re.compile('\\.[A-Z][a-zA-Z0-9_]+')
 
