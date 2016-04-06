@@ -37,3 +37,12 @@ function! RealMakeWrapper()
 	endif
 	cwindow
 endfunction
+
+function! ShowBufferInOwnTab()
+	let id = bufnr('%')
+	let lno = line('.')
+	let cno = col('.')
+	tabe
+	exec 'buf ' . id
+	call setpos('.', [0, lno, cno, 0])
+endfunction
