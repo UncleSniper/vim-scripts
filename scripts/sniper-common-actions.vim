@@ -46,3 +46,14 @@ function! ShowBufferInOwnTab()
 	exec 'buf ' . id
 	call setpos('.', [0, lno, cno, 0])
 endfunction
+
+let g:browserprg = 'chromium'
+
+function! ShowURLInBrowser(url)
+	echom 'URL: ' . a:url
+	let cmd = shellescape(g:browserprg) . ' ' . shellescape(a:url)
+	new
+	setl buftype=nofile bufhidden=wipe nobuflisted noswapfile nowrap shellredir=>&
+	exec 'read !' . cmd
+	bwipeout
+endfunction
