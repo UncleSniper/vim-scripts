@@ -57,3 +57,18 @@ function! ShowURLInBrowser(url)
 	exec 'read !' . cmd
 	bwipeout
 endfunction
+
+function! CommandLineBackSegment()
+	let cmd = getcmdline()
+	let pos = getcmdpos()
+	if pos > 1 && strpart(cmd, pos - 2, 1) == '/'
+		let pos -= 1
+	endif
+	if pos >= 2
+		let spos = strridx(cmd, '/', pos - 2)
+		if spos >= 0
+			call setcmdpos(spos + 2)
+		endif
+	endif
+	return cmd
+endfunction

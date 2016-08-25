@@ -20,6 +20,7 @@ nmap <silent> <Leader>e :cn<CR>
 
 " gah
 imap <C-l> l
+cmap <C-a> <C-\>eCommandLineBackSegment()<CR>
 
 " programming stuff
 "imap <C-b> {<CR>}<C-o>O<Tab>
