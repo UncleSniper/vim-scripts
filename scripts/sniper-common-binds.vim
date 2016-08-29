@@ -40,6 +40,12 @@ imap <C-z> <Esc>O<CR>
 imap <C-n> <C-o>o
 nmap <Leader>T :call ShowBufferInOwnTab()<CR>
 
+" window stuff
+nmap <S-Left> <C-w><Left>
+nmap <S-Right> <C-w><Right>
+nmap <S-Up> <C-w><Up>
+nmap <S-Down> <C-w><Down>
+
 " common, but optional
 function! BindSemicolonLanguage()
 	inoremap <buffer> ; <End>;
