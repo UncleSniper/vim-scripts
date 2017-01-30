@@ -76,7 +76,7 @@ ${0}
 endsnippet
 
 snippet _api "API export macro"
-${1:`!v toupper(fnamemodify(getcwd(), ':t'))`}_${2:`!v toupper(substitute(substitute(expand('%'), '^modules/', '', ''), '/.*', '', ''))`}_API ${0}
+${1:`!v toupper(fnamemodify(getcwd(), ':t'))`}_${2:`!v toupper(substitute(substitute(substitute(expand('%'), '^modules/', '', ''), '/.*', '', ''), '[^a-zA-Z0-9]\+', '', 'g'))`}_API ${0}
 endsnippet
 
 snippet _cn "Class name"
