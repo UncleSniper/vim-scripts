@@ -4,6 +4,7 @@ function! SetupCPPScripts()
 	if len(glob('project.properties'))
 		exec 'setl makeprg=' . g:xakeprg
 	endif
+	ab <buffer> viod void
 endfunction
 
 au BufRead,BufNewFile *.cpp call SetupCPPScripts()
