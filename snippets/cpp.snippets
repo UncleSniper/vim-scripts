@@ -90,3 +90,13 @@ endsnippet
 snippet afl "assign field"
 this->${1:<name>} = ${1///};${0}
 endsnippet
+
+snippet _apr "API private"
+  ${1:`!v toupper(fnamemodify(getcwd(), ':t'))`}_${2:`!v toupper(substitute(substitute(substitute(expand('%'), '^modules/', '', ''), '/.*', '', ''), '[^a-zA-Z0-9]\+', '', 'g'))`}_PRIVATE:
+	${0}
+endsnippet
+
+snippet _apo "API protected"
+  ${1:`!v toupper(fnamemodify(getcwd(), ':t'))`}_${2:`!v toupper(substitute(substitute(substitute(expand('%'), '^modules/', '', ''), '/.*', '', ''), '[^a-zA-Z0-9]\+', '', 'g'))`}_PROTECTED:
+	${0}
+endsnippet
