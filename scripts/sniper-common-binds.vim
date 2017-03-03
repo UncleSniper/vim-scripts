@@ -5,6 +5,10 @@ for tmp in range(1, 12)
 	exec "nmap <F" . tmp . "> " . tmp . "gt"
 	exec "imap <F" . tmp . "> <Esc>" . tmp . "gta"
 endfor
+nmap <C-Left> gT
+nmap <C-Right> gt
+imap <C-Left> <Esc>gT
+imap <C-Right> <Esc>gt
 
 nmap <C-s> :w<CR>
 nmap <Leader>ns /\<TODO\><CR>
@@ -45,6 +49,10 @@ nmap <S-Left> <C-w><Left>
 nmap <S-Right> <C-w><Right>
 nmap <S-Up> <C-w><Up>
 nmap <S-Down> <C-w><Down>
+imap <S-Left> <Esc><C-w><Left>i
+imap <S-Right> <Esc><C-w><Right>i
+imap <S-Up> <Esc><C-w><Up>i
+imap <S-Down> <Esc><C-w><Down>i
 
 " common, but optional
 function! BindSemicolonLanguage()
