@@ -100,3 +100,19 @@ snippet _apo "API protected"
   ${1:`!v toupper(fnamemodify(getcwd(), ':t'))`}_${2:`!v toupper(substitute(substitute(substitute(expand('%'), '^modules/', '', ''), '/.*', '', ''), '[^a-zA-Z0-9]\+', '', 'g'))`}_PROTECTED:
 	${0}
 endsnippet
+
+snippet _sc "static_cast"
+static_cast<${1:T}>(${0})
+endsnippet
+
+snippet _dc "dynamic_cast"
+dynamic_cast<${1:T}>(${0})
+endsnippet
+
+snippet _cc "const_cast"
+const_cast<${1:T}>(${0})
+endsnippet
+
+snippet _rc "reinterpret_cast"
+reinterpret_cast<${1:T}>(${0})
+endsnippet
