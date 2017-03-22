@@ -6,7 +6,7 @@ let s:typeListPattern = s:typePattern . '\%(, ' . s:typePattern . '\)*'
 
 let s:fieldDeclPattern =  '^[ \t]*\%(\(public\|protected\|private\) \)\?'
 let s:fieldDeclPattern .= '\(static \)\?\(\final \)\?'
-let s:fieldDeclPattern .= '\(' . s:typePattern . '\) \(\I\i*\)\%(;\| =\)'
+let s:fieldDeclPattern .= '\(' . s:typePattern . '\) \(\I\i*\)\(;\| =\)'
 
 let s:implementsPattern = '^[ \t]*\%(implements \)\?' . s:typeListPattern . '\%( {\)\?$'
 let s:classDefPattern =  '^[ \t]*\%(public \|protected \|private \)\?'
@@ -25,7 +25,8 @@ function! JavaAnalyzeFieldDeclaration(lno)
 	let isFinal = !!len(get(ml, 3))
 	let type = get(ml, 4)
 	let name = get(ml, 5)
-	return [visibility, isStatic, isFinal, type, name]
+	let isInit = get(ml, 6) == ' ='
+	return [visibility, isStatic, isFinal, type, name, isInit]
 endfunction
 
 function! JavaFindClassName(lno)
@@ -253,20 +254,24 @@ function! JavaGenerateConstructor()
 	let indent = JavaGetIndentation(lastfield)
 	let keys =  lastfield . "Go\<Esc>i\<CR>" . indent . 'public ' . class . '('
 	let assignments = ''
+	let needComma = 0
 	for idx in range(len(fields))
 		let field = JavaAnalyzeFieldDeclaration(get(fields, idx))
-		if !get(field, 1)
-			if idx
+		if !get(field, 1) && !get(field, 5)
+			if needComma
 				let keys .= ', '
 			endif
 			let keys .= get(field, 3) . ' ' . get(field, 4)
 			let assignments .= "\<CR>"
-			if idx
+			if needComma
 				let assignments .= JavaIndentIfNeeded(indent . "\<Tab>")
 			else
 				let assignments .= JavaIndentIfNeeded(indent) . "\<Tab>"
 			endif
 			let assignments .= 'this.' . get(field, 4) . ' = ' . get(field, 4) . ';'
+			if !needComma
+				let needComma = 1
+			endif
 		endif
 	endfor
 	let keys .= ') {'
