@@ -13,4 +13,5 @@ au BufRead,BufNewFile grammar*.txt call SetupGrammarFileType()
 function! SetupGrammarFileType()
 	setl tw=0
 	setl makeprg=ll1check\ %
+	setf grammar
 endfunction
