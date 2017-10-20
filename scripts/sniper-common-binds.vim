@@ -43,6 +43,7 @@ imap <C-q> <C-o>O<Tab>
 imap <C-z> <Esc>O<CR>
 imap <C-n> <C-o>o
 nmap <Leader>T :call ShowBufferInOwnTab()<CR>
+imap <C-u> <Del>
 
 " window stuff
 nmap <S-Left> <C-w><Left>
