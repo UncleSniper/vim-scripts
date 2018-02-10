@@ -178,7 +178,7 @@ switch(${1:<value>}) {
 endsnippet
 
 snippet pkg "package"
-package ${1:`!v substitute(substitute(expand('%:h'), '^src/', '', ''), '/', '.', 'g')`};
+package ${1:`!v substitute(substitute(substitute(expand('%:h'), '^src/main/java/', '', ''), '^src/', '', ''), '/', '.', 'g')`};
 
 ${0}
 endsnippet
