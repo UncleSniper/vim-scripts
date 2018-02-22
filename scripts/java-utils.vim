@@ -152,3 +152,21 @@ function! s:NewIfBranch(oldBranchLine, isCatch)
 		return keys . "else if\<Tab>"
 	endif
 endfunction
+
+let s:sourceFilePrefixes = [
+\	'^src/main/java/',
+\	'^src/test/java/',
+\	'^src/'
+\]
+
+function! JavaGuessPackage()
+	let fn = expand('%:h')
+	for pfx in s:sourceFilePrefixes
+		let short = substitute(fn, pfx, '', '')
+		if short != fn
+			let fn = short
+			break
+		endif
+	endfor
+	return substitute(fn, '/', '.', 'g')
+endfunction
