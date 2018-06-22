@@ -10,7 +10,7 @@ fi
 
 here="$(dirname -- "$(readlink -f -- "${BASH_SOURCE-$0}")")"
 mkdir -p "$dest"/.vim/{autoload,bundle,syntax}
-[ -f "$dest"/.vim/autoload/pathogen.vim ] || wget https://github.com/tpope/vim-pathogen/raw/master/autoload/pathogen.vim -O "$dest"/.vim/autoload/pathogen.vim
+[ -f "$dest"/.vim/autoload/pathogen.vim ] || wget --no-verbose https://github.com/tpope/vim-pathogen/raw/master/autoload/pathogen.vim -O "$dest"/.vim/autoload/pathogen.vim
 bash -- "$here/DEPEND" "$dest"
 [ -L "$dest"/.vim/UltiSnips ] || ln -s -- "$here/snippets" "$dest"/.vim/UltiSnips
 [ -L "$dest"/.vim/usnippets ] || ln -s -- "$here/snippets" "$dest"/.vim/usnippets
