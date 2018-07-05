@@ -1,3 +1,5 @@
+#!/bin/bash
+
 function repo {
 	if [ -d "$1" ]; then
 		(cd "$1" && git pull)
@@ -7,7 +9,16 @@ function repo {
 }
 
 set -e
-cd ~/.vim/bundle
+
+if [ $# = 0 ]; then
+	dest=~
+else
+	dest="$1"
+fi
+
+mkdir -p -- "$dest/.vim/bundle"
+cd "$dest/.vim/bundle"
+
 repo bufexplorer https://github.com/jlanzarotta/bufexplorer.git
 repo ctrlp.vim https://github.com/kien/ctrlp.vim
 repo delimitMate https://github.com/Raimondi/delimitMate.git
