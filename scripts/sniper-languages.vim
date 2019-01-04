@@ -22,4 +22,6 @@ let lisp_rainbow = 1
 "au BufWinEnter,WinEnter * match Error /\s\+$/
 "au InsertLeave * match Error /\s\+$/
 "au InsertEnter * match
-set list listchars=tab:→→,trail:†
+"set list listchars=tab:→\ ,trail:†
+set list listchars=tab:\ \ ,trail:†
+set cc=121
