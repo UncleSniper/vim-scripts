@@ -1,3 +1,6 @@
+set encoding=utf-8
+scriptencoding utf-8
+
 au BufRead,BufNewFile *.tex nmap <C-]> :w<CR>:!./build<CR>
 au BufRead,BufNewFile *.tex imap <C-f> <End>
 au BufRead,BufNewFile *.grm setf aeon-grammar
@@ -17,5 +20,8 @@ let lisp_rainbow = 1
 
 " highlight excess whitespace
 "au BufWinEnter,WinEnter * match Error /\s\+$/
-au InsertLeave * match Error /\s\+$/
-au InsertEnter * match
+"au InsertLeave * match Error /\s\+$/
+"au InsertEnter * match
+"set list listchars=tab:→\ ,trail:†
+set list listchars=tab:\ \ ,trail:†
+set cc=121
