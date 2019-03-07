@@ -16,6 +16,7 @@ nmap <Leader>ns /\<TODO\><CR>
 noremap <silent> <Leader><Leader> :BufExplorer<CR>
 "noremap <silent> <C-n> :bn<CR>
 "noremap <silent> <C-p> :bp<CR>
+nnoremap <silent> <Leader><Space> :CtrlPMixed<CR>
 
 " languages may override
 "nmap <silent> <Leader>m :make<Space>\|<Space>cwindow<CR>
