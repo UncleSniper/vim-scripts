@@ -189,8 +189,8 @@ function! GenJavaProject(name, modtype, basepkg, mainclass)
 	if a:modtype == 3
 		call GenJavaWebXML(a:name, a:basepkg . '.' . a:mainclass)
 	endif
-	" jre6.packages
-	call GenProjectFileFromTemplate('jre6.packages', 'jre6.packages', {}, 0, 0)
+	" jre8.packages
+	call GenProjectFileFromTemplate('jre8.packages', 'jre8.packages', {}, 0, 0)
 	" lib/
 	call LogGenProjectAction('mkdir', 'lib')
 	call mkdir('lib')

@@ -12,8 +12,8 @@ MANIFEST_PROPERTY
 WAR_PROPERTIES
 	<property name="doc" location="doc"/>
 	<property name="api.doc.visibility" value="private"/>
-	<property name="javadoc.jre.package.list" location="jre6.packages"/>
-	<property name="javadoc.jre.url" value="http://docs.oracle.com/javase/6/docs/api/"/>
+	<property name="javadoc.jre.package.list" location="jre8.packages"/>
+	<property name="javadoc.jre.url" value="http://docs.oracle.com/javase/8/docs/api/"/>
 
 	<path id="build.classpath">
 		<fileset dir="${lib}" includes="**/*.jar"/>
