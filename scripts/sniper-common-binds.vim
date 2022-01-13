@@ -1,5 +1,6 @@
 imap <C-\> <Esc>
 imap <C-@> <C-p>
+imap <C-Space> <C-p>
 
 for tmp in range(1, 12)
 	exec "nmap <F" . tmp . "> " . tmp . "gt"
