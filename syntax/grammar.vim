@@ -5,6 +5,7 @@ syn match gramNonTerm /\<[a-z][a-z0-9_]\+\>/
 syn match gramRule /^\<[a-z][a-z0-9_]\+\>/
 syn match gramOper /[|%()?+*]/
 syn match gramToken /\<[A-Z][A-Z0-9_]\+\>/
+syn match gramComment /#.*$/
 
 syn region gramTerm start=+'+ end=+'+
 
@@ -13,5 +14,6 @@ hi link gramRule Special
 hi link gramOper Keyword
 hi link gramToken Comment
 hi link gramTerm Constant
+hi link gramComment Comment
 
 "hi link gramNonTerm Type
