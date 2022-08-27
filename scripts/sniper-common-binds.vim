@@ -13,6 +13,7 @@ imap <C-Right> <Esc>gt
 
 nmap <C-s> :w<CR>
 nmap <Leader>ns /\<TODO\><CR>
+nmap <C-w><S-q> :q!<CR>
 
 noremap <silent> <Leader><Leader> :BufExplorer<CR>
 "noremap <silent> <C-n> :bn<CR>
