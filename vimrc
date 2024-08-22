@@ -23,6 +23,7 @@ runtime scripts/sniper-java.vim
 runtime scripts/sniper-cpp.vim
 runtime scripts/sniper-latex.vim
 runtime scripts/sniper-flexipl.vim
+runtime scripts/sniper-go.vim
 
 " evaluation stuff
 runtime scripts/sniper-eval-binding.vim
